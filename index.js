@@ -23,6 +23,8 @@ dbConnection();
 app.use('/api/login', require('./routes/auth'));
 app.use('/api/compradores', require('./routes/compradores'));
 app.use('/api/proveedores', require('./routes/proveedores'));
+app.use('/api/administradores', require('./routes/administradores'));
+/* app.use('/api/asistentesTecnicos', require('./routes/asistentesTecnicos')); */
 
 app.listen(process.env.PORT, () => {
     console.log('Servidor corriendo en el puerto ' + process.env.PORT);
