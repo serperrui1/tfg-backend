@@ -54,7 +54,12 @@ const CompradorSchema = Schema({
     google: {
         type: Boolean,
         default: false
-    }
+    },
+    carritoCompra: [{
+        type: Schema.Types.ObjectId,
+        ref: 'articuloCarrito'
+    }]
+
 
 });
 CompradorSchema.method('toJSON', function() {

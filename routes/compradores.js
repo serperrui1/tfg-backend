@@ -12,7 +12,7 @@ const router = Router()
 
 router.get('/', validarJWT, getCompradores);
 
-router.post('/', [validarJWT,
+router.post('/', [
         check('nombre', 'El nombre es obligatorio').not().isEmpty(),
         check('apellidos', 'El apellido es obligatorio').not().isEmpty(),
         check('password', 'El password es obligatorio').not().isEmpty(),

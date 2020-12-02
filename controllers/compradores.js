@@ -28,14 +28,14 @@ const crearComprador = async(req, res) => {
         //Guardar usuario
         await comprador.save();
 
-        //Generar el tocken
+        //Generar el token
 
-        const token = await generarJWT(comprador.id);
+        // const token = await generarJWT(comprador.id);
 
         res.json({
             ok: true,
-            comprador,
-            token
+            comprador
+            //  token
         });
 
     } catch (error) {
@@ -45,14 +45,6 @@ const crearComprador = async(req, res) => {
         });
     }
 
-
-    await comprador.save();
-
-    res.json({
-        ok: true,
-        comprador
-
-    });
 }
 
 const getCompradores = async(req, res = response) => {
