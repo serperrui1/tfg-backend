@@ -46,8 +46,6 @@ const crearProveedor = async(req, res) => {
     }
 
 
-    await proveedor.save();
-
     res.json({
         ok: true,
         proveedor

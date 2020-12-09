@@ -30,12 +30,12 @@ const crearComprador = async(req, res) => {
 
         //Generar el token
 
-        // const token = await generarJWT(comprador.id);
+        const token = await generarJWT(comprador.id);
 
         res.json({
             ok: true,
-            comprador
-            //  token
+            comprador,
+            token
         });
 
     } catch (error) {

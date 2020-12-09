@@ -12,7 +12,7 @@ const router = Router()
 
 router.get('/', validarJWT, getProveedores);
 
-router.post('/', [validarJWT,
+router.post('/', [
         check('nombreEmpresa', 'El nombre de la empresa es obligatorio').not().isEmpty(),
         check('autonomo', 'El autonomo TRUE/FALSE es obligatorio').not().isEmpty(),
         check('password', 'El password es obligatorio').not().isEmpty(),
