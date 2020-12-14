@@ -3,7 +3,7 @@
  */
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { loginComprador, loginProveedor } = require('../controllers/auth');
+const { loginComprador, loginProveedor, loginAdministrador, loginAsistente } = require('../controllers/auth');
 const { validarCampos } = require('../middlewares/validar-campos');
 
 
@@ -23,6 +23,20 @@ router.post('/proveedor', [
     validarCampos
 
 ], loginProveedor);
+
+router.post('/administrador', [
+    check('email', 'El correo es obligatorio').isEmail(),
+    check('password', 'El password es obligatorio').not().isEmpty(),
+    validarCampos
+
+], loginAdministrador);
+
+router.post('/asistente', [
+    check('email', 'El correo es obligatorio').isEmail(),
+    check('password', 'El password es obligatorio').not().isEmpty(),
+    validarCampos
+
+], loginAsistente);
 
 
 
