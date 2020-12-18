@@ -14,6 +14,9 @@ const AsistenteTecnicoSchema = Schema({
     password: {
         type: String,
         required: true
+    },
+    img: {
+        type: String
     }
 
 

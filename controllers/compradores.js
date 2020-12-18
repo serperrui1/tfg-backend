@@ -56,6 +56,15 @@ const getCompradores = async(req, res = response) => {
     });
 }
 
+const getComprador = async(req, res = response) => {
+
+    const compradores = await Comprador.findById(req.uid);
+    res.json({
+        ok: true,
+        compradores
+    });
+}
+
 const actualizarComprador = async(req, res = response) => {
 
     // TODO: Validar token y comprobar si el usuario es correcto
@@ -109,6 +118,7 @@ module.exports = {
 
     crearComprador,
     getCompradores,
-    actualizarComprador
+    actualizarComprador,
+    getComprador
 
 }
