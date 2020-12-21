@@ -61,7 +61,7 @@ const getProductos = async(req, res = response) => {
         ok: true,
         productos
     });
-}
+};
 const getProducto = async(req, res = response) => {
 
     const producto = await Producto.findById(req.params.id);
@@ -69,7 +69,17 @@ const getProducto = async(req, res = response) => {
         ok: true,
         producto
     });
-}
+};
+
+const borrarProducto = async(req, res = response) => {
+
+    const producto = await Producto.findByIdAndDelete(req.params.id);
+    res.json({
+        ok: true,
+        msg: 'producto borrado'
+    });
+};
+
 
 
 
@@ -77,6 +87,7 @@ module.exports = {
 
     crearProducto,
     getProductos,
-    getProducto
+    getProducto,
+    borrarProducto
 
 }
