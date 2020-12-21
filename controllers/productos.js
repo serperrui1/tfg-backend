@@ -56,10 +56,18 @@ const crearProducto = async(req, res) => {
 };
 const getProductos = async(req, res = response) => {
 
-    const productos = await Producto.find({}, 'titulo, img, descripcion ');
+    const productos = await Producto.find({});
     res.json({
         ok: true,
         productos
+    });
+}
+const getProducto = async(req, res = response) => {
+
+    const producto = await Producto.findById(req.params.id);
+    res.json({
+        ok: true,
+        producto
     });
 }
 
@@ -68,6 +76,7 @@ const getProductos = async(req, res = response) => {
 module.exports = {
 
     crearProducto,
-    getProductos
+    getProductos,
+    getProducto
 
 }
