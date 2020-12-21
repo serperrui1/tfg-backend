@@ -24,6 +24,7 @@ router.post('/', [
         check('cuentaBancariaIBAN', 'La cuenta bancaria es obligatoria').not().isEmpty(),
         check('titularCuenta', 'El titular de la cuenta es obligatorio').not().isEmpty(),
         validarCampos
+
     ],
     crearProveedor);
 router.put('/:id', [validarJWT,

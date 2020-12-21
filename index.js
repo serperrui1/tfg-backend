@@ -26,6 +26,7 @@ app.use('/api/proveedores', require('./routes/proveedores'));
 app.use('/api/administradores', require('./routes/administradores'));
 app.use('/api/asistentesTecnicos', require('./routes/asistentesTecnicos'));
 app.use('/api/upload', require('./routes/uploads'));
+app.use('/api/productos', require('./routes/productos'));
 
 
 app.listen(process.env.PORT, () => {
