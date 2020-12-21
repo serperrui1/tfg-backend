@@ -13,21 +13,17 @@ const validarJWT = (req, res, next) => {
             msg: 'No hay token en la petición'
         });
     }
-
     try {
-
         const { uid } = jwt.verify(token, process.env.JWT_SECRET);
         req.uid = uid;
 
         next();
-
     } catch (error) {
         return res.status(401).json({
             ok: false,
             msg: 'Token no válido'
         });
     }
-
 }
 
 

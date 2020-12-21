@@ -23,10 +23,6 @@ const CompradorSchema = Schema({
         type: String,
         required: true
     },
-    nacionalidad: {
-        type: String,
-        required: true
-    },
     paisResidencia: {
         type: String,
         required: true
@@ -54,6 +50,10 @@ const CompradorSchema = Schema({
     google: {
         type: Boolean,
         default: false
+    },
+    img: {
+        type: String,
+        required: false
     },
     carritoCompra: [{
         type: Schema.Types.ObjectId,

@@ -3,7 +3,7 @@ Ruta : /api/compradores
  */
 
 const { Router } = require('express');
-const { crearProveedor, getProveedores, actualizarProveedor } = require('../controllers/proveedores');
+const { crearProveedor, getProveedores, actualizarProveedor, getProveedor } = require('../controllers/proveedores');
 const { check, validationResult } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../helpers/validar-jwt');
@@ -12,7 +12,9 @@ const router = Router()
 
 router.get('/', validarJWT, getProveedores);
 
-router.post('/', [validarJWT,
+router.get('/perfil', validarJWT, getProveedor);
+
+router.post('/', [
         check('nombreEmpresa', 'El nombre de la empresa es obligatorio').not().isEmpty(),
         check('autonomo', 'El autonomo TRUE/FALSE es obligatorio').not().isEmpty(),
         check('password', 'El password es obligatorio').not().isEmpty(),

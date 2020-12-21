@@ -41,6 +41,9 @@ const ProveedorSchema = Schema({
         type: String,
         required: true
     },
+    img: {
+        type: String
+    },
     productosId: [{
         type: String
     }]
