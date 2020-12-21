@@ -25,6 +25,8 @@ const crearComprador = async(req, res) => {
         const salt = bcrypt.genSaltSync();
         comprador.password = bcrypt.hashSync(password, salt);
 
+        comprador.img = "";
+
         //Guardar usuario
         await comprador.save();
 

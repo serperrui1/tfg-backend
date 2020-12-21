@@ -1,5 +1,5 @@
-const { response } = require('express')
-const bcrypt = require('bcrypt')
+const { response } = require('express');
+const bcrypt = require('bcrypt');
 
 const Proveedor = require('../models/proveedor');
 const { generarJWT } = require('../helpers/jwt');
@@ -24,6 +24,8 @@ const crearProveedor = async(req, res) => {
         // Encriptar contraseña 
         const salt = bcrypt.genSaltSync();
         proveedor.password = bcrypt.hashSync(password, salt);
+
+        proveedor.img = "";
 
         //Guardar usuario
         await proveedor.save();
@@ -53,7 +55,7 @@ const crearProveedor = async(req, res) => {
         proveedor
 
     });
-}
+};
 
 const getProveedores = async(req, res = response) => {
 
@@ -62,7 +64,16 @@ const getProveedores = async(req, res = response) => {
         ok: true,
         proveedores
     });
-}
+};
+
+const getProveedor = async(req, res = response) => {
+
+    const proveedor = await Proveedor.findById(req.uid);
+    res.json({
+        ok: true,
+        proveedor
+    });
+};
 
 const actualizarProveedor = async(req, res = response) => {
 
@@ -78,7 +89,7 @@ const actualizarProveedor = async(req, res = response) => {
             return res.status(404).json({
                 ok: false,
                 msg: 'No existe un proveedor con ese id'
-            })
+            });
         }
 
         // Actualizaciones
@@ -92,31 +103,32 @@ const actualizarProveedor = async(req, res = response) => {
                 return res.status(400).json({
                     ok: false,
                     msg: 'Ya existe un proveedor con ese email'
-                })
+                });
             }
         }
 
-        const proveedorActualizado = await Proveedor.findByIdAndUpdate(uid, campos, { new: true })
+        const proveedorActualizado = await Proveedor.findByIdAndUpdate(uid, campos, { new: true });
 
         res.json({
             ok: true,
             proveedor: proveedorActualizado
-        })
+        });
 
     } catch (error) {
         res.status(500).json({
             ok: false,
             msg: 'Error inesperado'
-        })
+        });
 
     }
-}
+};
 
 
 module.exports = {
 
     crearProveedor,
     getProveedores,
-    actualizarProveedor
+    actualizarProveedor,
+    getProveedor
 
-}
+};
