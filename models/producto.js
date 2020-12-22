@@ -15,13 +15,19 @@ const ProductoSchema = Schema({
         type: String,
         required: true
     },
-    datosTecnicos: {
-        type: String,
-        required: true
-    },
+    datosTecnicos: [{
+        titulo: {
+            type: String,
+            required: true
+        },
+        descripcion: {
+            type: String,
+            required: true
+        }
+    }],
     categoria: {
         type: String,
-        required: true
+        requireD: true
     },
     subcategoria: {
         type: String,
