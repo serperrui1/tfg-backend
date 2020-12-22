@@ -70,6 +70,57 @@ const getProducto = async(req, res = response) => {
         producto
     });
 };
+const actualizarProducto = async(req, res = response) => {
+
+    // TODO: Validar token y comprobar si el usuario es correcto
+    const token = req.header('x-token');
+
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    const productoId = req.params.id;
+
+    try {
+
+        const productoDB = await Producto.findById(productoId);
+
+        if (!productoDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe el producto con esa ID en la base de datos'
+            });
+        }
+
+        // Actualizaciones
+        const { proveedor, ...campos } = req.body;
+
+
+        if (productoDB.proveedor == uid) {
+
+            console.log(productoDB.proveedor);
+            console.log(uid);
+            const productoActualizado = await Producto.findByIdAndUpdate(productoId, campos, { new: true });
+
+            res.json({
+                ok: true,
+                producto: productoActualizado
+            })
+
+        } else {
+            return res.status(400).json({
+                ok: false,
+                msg: 'No es el proveedor del producto'
+            });
+        }
+
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado'
+        });
+
+    }
+};
+
 
 const borrarProducto = async(req, res = response) => {
 
@@ -88,6 +139,7 @@ module.exports = {
     crearProducto,
     getProductos,
     getProducto,
+    actualizarProducto,
     borrarProducto
 
 }
