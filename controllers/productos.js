@@ -62,6 +62,18 @@ const getProductos = async(req, res = response) => {
         productos
     });
 };
+const getMisProductos = async(req, res = response) => {
+
+    const token = req.header('x-token');
+
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+
+    const productos = await Producto.find({ proveedor: uid });
+    res.json({
+        ok: true,
+        productos
+    });
+};
 const getProducto = async(req, res = response) => {
 
     const producto = await Producto.findById(req.params.id);
@@ -102,7 +114,7 @@ const actualizarProducto = async(req, res = response) => {
             res.json({
                 ok: true,
                 producto: productoActualizado
-            })
+            });
 
         } else {
             return res.status(400).json({
@@ -138,6 +150,7 @@ module.exports = {
 
     crearProducto,
     getProductos,
+    getMisProductos,
     getProducto,
     actualizarProducto,
     borrarProducto
