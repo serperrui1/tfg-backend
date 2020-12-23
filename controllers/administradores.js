@@ -11,7 +11,16 @@ const getAdministradores = async(req, res = response) => {
         ok: true,
         administradores
     });
-}
+};
+
+const getAdministrador = async(req, res = response) => {
+
+    const administradores = await Administrador.findById(req.uid);
+    res.json({
+        ok: true,
+        administradores
+    });
+};
 
 const actualizarAdministrador = async(req, res = response) => {
 
@@ -59,12 +68,13 @@ const actualizarAdministrador = async(req, res = response) => {
         })
 
     }
-}
+};
 
 
 module.exports = {
 
     getAdministradores,
+    getAdministrador,
     actualizarAdministrador
 
-}
+};

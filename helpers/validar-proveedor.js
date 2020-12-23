@@ -16,10 +16,6 @@ const validarProveedor = async(req, res = response, next) => {
     } else {
         next();
     }
-
-
-
-
 }
 
 module.exports = {

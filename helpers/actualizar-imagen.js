@@ -1,6 +1,7 @@
 const Comprador = require('../models/comprador');
 const Proveedor = require('../models/proveedor');
 const AsistenteTecnico = require('../models/asistenteTecnico');
+const Administrador = require('../models/administrador');
 const fs = require('fs');
 
 const borrarImagen = (path) => {
@@ -64,12 +65,26 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
             return true;
 
             break;
+
+        case 'administradores':
+
+            const administrador = await Administrador.findById(id);
+            if (!administrador) {
+                console.log('No es un administrador por id');
+                return false;
+            }
+
+            pathViejo = `./uploads/administradores/${ administrador.img }`;
+            borrarImagen(pathViejo);
+
+            administrador.img = nombreArchivo;
+            await administrador.save();
+            return true;
+
+            break;
     }
 
-
 }
-
-
 
 module.exports = {
     actualizarImagen

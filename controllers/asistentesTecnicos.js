@@ -11,7 +11,16 @@ const getAsistentesTecnicos = async(req, res = response) => {
         ok: true,
         asistentesTecnicos
     });
-}
+};
+
+const getAsistenteTecnico = async(req, res = response) => {
+
+    const asistentesTecnicos = await AsistenteTecnico.findById(req.uid);
+    res.json({
+        ok: true,
+        asistentesTecnicos
+    });
+};
 
 const actualizarAsistenteTecnico = async(req, res = response) => {
 
@@ -59,7 +68,7 @@ const actualizarAsistenteTecnico = async(req, res = response) => {
         })
 
     }
-}
+};
 
 const borrarAsistenteTecnico = async(req, res = response) => {
 
@@ -92,12 +101,13 @@ const borrarAsistenteTecnico = async(req, res = response) => {
 
     }
 
-}
+};
 
 module.exports = {
 
     getAsistentesTecnicos,
+    getAsistenteTecnico,
     actualizarAsistenteTecnico,
     borrarAsistenteTecnico
 
-}
+};

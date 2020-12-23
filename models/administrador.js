@@ -14,6 +14,9 @@ const AdministradorSchema = Schema({
     password: {
         type: String,
         required: true
+    },
+    img: {
+        type: String
     }
 
 
