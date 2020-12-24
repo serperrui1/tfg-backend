@@ -47,7 +47,7 @@ const crearComprador = async(req, res) => {
         });
     }
 
-}
+};
 
 const getCompradores = async(req, res = response) => {
 
@@ -56,7 +56,7 @@ const getCompradores = async(req, res = response) => {
         ok: true,
         compradores
     });
-}
+};
 
 const getComprador = async(req, res = response) => {
 
@@ -65,7 +65,7 @@ const getComprador = async(req, res = response) => {
         ok: true,
         compradores
     });
-}
+};
 
 const actualizarComprador = async(req, res = response) => {
 
@@ -99,21 +99,21 @@ const actualizarComprador = async(req, res = response) => {
             }
         }
 
-        const compradorActualizado = await Comprador.findByIdAndUpdate(uid, campos, { new: true })
+        const compradorActualizado = await Comprador.findByIdAndUpdate(uid, campos, { new: true });
 
         res.json({
             ok: true,
             comprador: compradorActualizado
-        })
+        });
 
     } catch (error) {
         res.status(500).json({
             ok: false,
             msg: 'Error inesperado'
-        })
+        });
 
     }
-}
+};
 
 
 module.exports = {

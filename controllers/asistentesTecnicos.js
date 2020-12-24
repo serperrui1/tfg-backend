@@ -70,7 +70,7 @@ const actualizarAsistenteTecnico = async(req, res = response) => {
     }
 };
 
-const borrarAsistenteTecnico = async(req, res = response) => {
+/* const borrarAsistenteTecnico = async(req, res = response) => {
 
     const uid = req.params.id;
     try {
@@ -101,13 +101,13 @@ const borrarAsistenteTecnico = async(req, res = response) => {
 
     }
 
-};
+}; */
 
 module.exports = {
 
     getAsistentesTecnicos,
     getAsistenteTecnico,
-    actualizarAsistenteTecnico,
-    borrarAsistenteTecnico
+    actualizarAsistenteTecnico
+    /* borrarAsistenteTecnico */
 
 };

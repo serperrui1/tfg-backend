@@ -16,6 +16,7 @@ router.get('/perfil', validarJWT, getAdministrador);
 
 router.put('/:id', [validarJWT,
         check('nombre', 'El nombre del administrador es obligatorio').not().isEmpty(),
+        check('apellidos', 'Los apellidos son obligatorios').not().isEmpty(),
         check('email', 'El email es obligatorio').isEmail(),
         validarCampos
     ],

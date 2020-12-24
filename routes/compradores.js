@@ -16,7 +16,7 @@ router.get('/perfil', validarJWT, getComprador);
 
 router.post('/', [
         check('nombre', 'El nombre es obligatorio').not().isEmpty(),
-        check('apellidos', 'El apellido es obligatorio').not().isEmpty(),
+        check('apellidos', 'Los apellidos son obligatorios').not().isEmpty(),
         check('password', 'El password es obligatorio').not().isEmpty(),
         check('email', 'El email es obligatorio').isEmail(),
         check('fechaNacimiento', 'La fecha de nacimiento es obligatoria').not().isEmpty(),
@@ -29,7 +29,7 @@ router.post('/', [
     crearComprador);
 router.put('/:id', [validarJWT,
         check('nombre', 'El nombre es obligatorio').not().isEmpty(),
-        check('apellidos', 'El apellido es obligatorio').not().isEmpty(),
+        check('apellidos', 'Los apellidos son obligatorios').not().isEmpty(),
         check('email', 'El email es obligatorio').isEmail(),
         check('fechaNacimiento', 'La fecha de nacimiento es obligatoria').not().isEmpty(),
         check('paisResidencia', 'El pais de residencia es obligatorio').not().isEmpty(),
