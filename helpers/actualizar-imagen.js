@@ -1,6 +1,7 @@
 const Comprador = require('../models/comprador');
 const Proveedor = require('../models/proveedor');
 const AsistenteTecnico = require('../models/asistenteTecnico');
+const Producto = require('../models/producto');
 const fs = require('fs');
 
 const borrarImagen = (path) => {
@@ -67,10 +68,24 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
     }
 
 
+};
+const crearImagen = async(id, nombreArchivo) => {
+
+    const producto = await Producto.findById(id);
+    if (!producto) {
+        console.log('No existe el producto con esa id');
+        return false;
+    }
+
+    producto.imagenes.push(nombreArchivo);
+    await producto.save();
+    return true;
+
 }
 
 
 
 module.exports = {
-    actualizarImagen
+    actualizarImagen,
+    crearImagen
 }
