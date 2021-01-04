@@ -25,7 +25,9 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
             }
 
             pathViejo = `./uploads/compradores/${ comprador.img }`;
-            borrarImagen(pathViejo);
+            if (comprador.img !== "") {
+                borrarImagen(pathViejo);
+            }
 
             comprador.img = nombreArchivo;
             await comprador.save();
@@ -41,7 +43,9 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
             }
 
             pathViejo = `./uploads/proveedores/${ proveedor.img }`;
-            borrarImagen(pathViejo);
+            if (proveedor.img !== "") {
+                borrarImagen(pathViejo);
+            }
 
             proveedor.img = nombreArchivo;
             await proveedor.save();
@@ -58,7 +62,9 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
             }
 
             pathViejo = `./uploads/asistentes/${ asistente.img }`;
-            borrarImagen(pathViejo);
+            if (asistente.img !== "") {
+                borrarImagen(pathViejo);
+            }
 
             asistente.img = nombreArchivo;
             await asistente.save();
