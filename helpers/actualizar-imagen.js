@@ -41,7 +41,10 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
             }
 
             pathViejo = `./uploads/proveedores/${ proveedor.img }`;
-            borrarImagen(pathViejo);
+            if (proveedor.img !== "") {
+                borrarImagen(pathViejo);
+            }
+
 
             proveedor.img = nombreArchivo;
             await proveedor.save();
