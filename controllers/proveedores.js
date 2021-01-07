@@ -75,6 +75,17 @@ const getProveedor = async(req, res = response) => {
     });
 };
 
+const getProveedorNombre = async(req, res = response) => {
+
+
+
+    const proveedor = await Proveedor.findById(req.params.id);
+    res.json({
+        ok: true,
+        nombreEmpresa: proveedor.nombreEmpresa
+    });
+};
+
 const actualizarProveedor = async(req, res = response) => {
 
     // TODO: Validar token y comprobar si el usuario es correcto
@@ -129,6 +140,7 @@ module.exports = {
     crearProveedor,
     getProveedores,
     actualizarProveedor,
-    getProveedor
+    getProveedor,
+    getProveedorNombre
 
 };
