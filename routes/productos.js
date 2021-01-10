@@ -1,5 +1,5 @@
 /*
-Ruta : /api/compradores
+Ruta : /api/productos
  */
 
 const { Router } = require('express');
@@ -20,7 +20,7 @@ router.get('/mis-productos', validarJWT, getMisProductos);
 router.post('/', [validarProveedor,
         check('titulo', 'El título es obligatorio').not().isEmpty(),
         check('descripcion', 'La descripción es obligatoria').not().isEmpty(),
-        /* check('imagenes', 'La imagen es obligatoria').not().isEmpty(), */
+        check('imagenes', 'La imagen es obligatoria').not().isEmpty(),
         /* check('datosTecnicos', 'Los datos técnicos son obligatorios').not().isEmpty(), */
         check('categoria', 'La categoría es obligatoria').not().isEmpty(),
         check('precio', 'El precio es obligatorio').not().isEmpty(),
@@ -33,8 +33,8 @@ router.post('/', [validarProveedor,
 router.put('/:id', [validarProveedor,
         check('titulo', 'El título es obligatorio').not().isEmpty(),
         check('descripcion', 'La descripción es obligatoria').not().isEmpty(),
-        check('imagenes', 'La imagen es obligatoria').not().isEmpty(),
-        check('datosTecnicos', 'Los datos técnicos son obligatorios').not().isEmpty(),
+        //check('imagenes', 'La imagen es obligatoria').not().isEmpty(),
+        //check('datosTecnicos', 'Los datos técnicos son obligatorios').not().isEmpty(),
         check('categoria', 'La categoría es obligatoria').not().isEmpty(),
         check('precio', 'El precio es obligatorio').not().isEmpty(),
         check('unidadesMinimas', 'Las unidades mínimas son obligatorias').not().isEmpty(),

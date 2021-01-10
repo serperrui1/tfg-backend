@@ -70,6 +70,24 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
             return true;
 
             break;
+
+
+        case 'productos':
+            const producto = await Producto.findById(id);
+            if (!producto) {
+                console.log('No es un producto por id');
+                return false;
+            }
+
+            pathViejo = `./uploads/productos/${ producto.imagenes }`;
+            if (producto.imagenes !== "") {
+                borrarImagen(pathViejo);
+            }
+            producto.imagenes = nombreArchivo;
+            await producto.save();
+            return true;
+
+            break;
     }
 
 
