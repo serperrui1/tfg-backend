@@ -67,6 +67,15 @@ const getComprador = async(req, res = response) => {
     });
 }
 
+const getCompradorEmail = async(req, res = response) => {
+
+    const comprador = await Comprador.findOne(req.body.email);
+    res.json({
+        ok: true,
+        email: comprador.email
+    });
+};
+
 const actualizarComprador = async(req, res = response) => {
 
     // TODO: Validar token y comprobar si el usuario es correcto
@@ -121,6 +130,7 @@ module.exports = {
     crearComprador,
     getCompradores,
     actualizarComprador,
-    getComprador
+    getComprador,
+    getCompradorEmail
 
 }
