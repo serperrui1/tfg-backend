@@ -3,7 +3,7 @@ Ruta : /api/compradores
  */
 
 const { Router } = require('express');
-const { crearComprador, getCompradores, actualizarComprador, getComprador } = require('../controllers/compradores');
+const { crearComprador, getCompradores, actualizarComprador, getComprador, getCompradorEmail } = require('../controllers/compradores');
 const { check, validationResult } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../helpers/validar-jwt');
@@ -11,6 +11,7 @@ const { validarJWT } = require('../helpers/validar-jwt');
 const router = Router()
 
 router.get('/', validarJWT, getCompradores);
+router.get('/email/:id', getCompradorEmail);
 
 router.get('/perfil', validarJWT, getComprador);
 
