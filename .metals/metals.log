@@ -2,3 +2,4 @@
 2021.01.12 17:53:27 INFO  time: initialize in 0.49s
 2021.01.12 17:53:28 WARN  Build server is not auto-connectable.
 2021.01.12 17:53:28 WARN  no build tool detected in workspace 'C:\Users\Frank\Desktop\TFG proyecto\backend\tfg-backend'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+2021.01.12 20:41:44 INFO  shutting down Metals
