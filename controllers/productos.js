@@ -54,6 +54,7 @@ const crearProducto = async(req, res) => {
     }
 
 };
+
 const getProductos = async(req, res = response) => {
 
     const productos = await Producto.find({});
@@ -62,6 +63,7 @@ const getProductos = async(req, res = response) => {
         productos
     });
 };
+
 const getMisProductos = async(req, res = response) => {
 
     const token = req.header('x-token');
@@ -74,6 +76,7 @@ const getMisProductos = async(req, res = response) => {
         productos
     });
 };
+
 const getProducto = async(req, res = response) => {
 
     const producto = await Producto.findById(req.params.id);
@@ -82,6 +85,7 @@ const getProducto = async(req, res = response) => {
         producto
     });
 };
+
 const actualizarProducto = async(req, res = response) => {
 
     // TODO: Validar token y comprobar si el usuario es correcto
@@ -132,7 +136,6 @@ const actualizarProducto = async(req, res = response) => {
 
     }
 };
-
 
 const borrarProducto = async(req, res = response) => {
 
