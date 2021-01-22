@@ -12,6 +12,13 @@ const crearIncidencia = async(req, res) => {
 
     const token = req.header('x-token');
     const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    const año = new Date().getFullYear();
+    año.toString();
+    const mes = new Date().getMonth() + 1;
+    mes.toString();
+    const dia = new Date().getDate();
+    dia.toString();
+
 
     try {
         const incidencia = new Incidencia(req.body);
@@ -21,6 +28,11 @@ const crearIncidencia = async(req, res) => {
 
             if (!req.body.asistenteId)
                 incidencia.asistenteId = "";
+
+            if (!req.body.fechaPublicacion) {
+                incidencia.fechaPublicacion = año + "-" + mes + "-" + dia;
+                console.log(incidencia.fechaPublicacion);
+            }
 
             //Guardar incidencia
             await incidencia.save();
@@ -49,7 +61,7 @@ const getIncidencias = async(req, res = response) => { //si el que accede a las 
     const token = req.header('x-token');
     const { uid } = jwt.verify(token, process.env.JWT_SECRET);
     const asistente = await AsistenteTecnico.findById(uid);
-    const incidencias = await Incidencia.find({});
+    const incidencias = await Incidencia.find({ asistenteId: "" });
     if (asistente != null) {
         res.json({
             ok: true,
@@ -69,18 +81,15 @@ const getMisIncidencias = async(req, res = response) => {
     const misIncidenciasDueño = await Incidencia.find({ creadorId: uid }); //si no es null, el que accede es su creador
     const misIncidenciasAsistente = await Incidencia.find({ asistenteId: uid }); //si no es null, el que accede es su asistente
 
-    if (misIncidenciasDueño != null && misIncidenciasDueño != []) {
-        const incidencias = misIncidenciasDueño;
+    if (misIncidenciasDueño.length != 0) {
         res.json({
             ok: true,
-            incidencias
+            incidencias: misIncidenciasDueño
         });
-    }
-    if (misIncidenciasAsistente != null && misIncidenciasAsistente != []) {
-        const incidencias = misIncidenciasAsistente;
+    } else if (misIncidenciasAsistente.length != 0) {
         res.json({
             ok: true,
-            incidencias
+            incidencias: misIncidenciasAsistente
         });
     } else {
         res.json({
@@ -114,19 +123,32 @@ const getIncidencia = async(req, res = response) => {
 const actualizarIncidencia = async(req, res = response) => {
     const token = req.header('x-token');
     const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    const asistente = await AsistenteTecnico.findById(uid);
 
     try {
         const incidencia = await Incidencia.findById(req.params.id);
-        const { asistenteId, creadorId, ...campos } = req.body;
+        const { asistenteId, creadorId, asignado, ...campos } = req.body;
         if (!incidencia) {
             return res.status(404).json({
                 ok: false,
                 msg: 'Controller: No existe esta incidencia.'
             });
         } else {
-            if (incidencia.asistenteId === uid || incidencia.creadorId === uid) { // soy el dueño de esta incidencia
-
+            // soy el dueño de esta incidencia o ya soy su asistente
+            if ((incidencia.asistenteId === uid && incidencia.asignado === true) || incidencia.creadorId === uid) {
                 const incidenciaActualizada = await Incidencia.findByIdAndUpdate(req.params.id, campos, { new: true });
+                res.json({
+                    ok: true,
+                    incidencia: incidenciaActualizada
+                });
+            }
+            //la quiero actualizar por primera vez para ser su asistente
+            if (incidencia.asistenteId === "" && incidencia.asignado === false && asistente != null) {
+                incidencia.asistenteId = uid;
+                incidencia.asignado = true;
+                incidencia.mensajes.push(campos.mensajes);
+                const incidenciaActualizada = await Incidencia.findByIdAndUpdate(req.params.id, incidencia, { new: true });
+
                 res.json({
                     ok: true,
                     incidencia: incidenciaActualizada

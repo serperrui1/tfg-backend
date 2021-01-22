@@ -13,9 +13,9 @@ const router = Router();
 
 router.get('/', accesoIncidencias, getIncidencias);
 
-router.get('/:id', getIncidencia);
+router.get('/incidencia/:id', getIncidencia);
 
-router.get('/mis-incidencias', validarJWT, accesoMisIncidencias, getMisIncidencias);
+router.get('/mis-incidencias', validarJWT, getMisIncidencias);
 
 router.post('/', [publicarIncidencia,
         check('titulo', 'El título es obligatorio').not().isEmpty(),
