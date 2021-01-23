@@ -88,15 +88,16 @@ const modificarIncidencia = async(req, res = response, next) => {
     const token = req.header('x-token');
     const { uid } = jwt.verify(token, process.env.JWT_SECRET);
     const incidencia = await Incidencia.findById(req.params.id);
-    console.log(incidencia);
-    console.log(uid);
+
     const asistente = await AsistenteTecnico.findById(uid);
 
 
-    if ((incidencia.asistenteId === uid && incidencia.asignado === true) || incidencia.creadorId === uid) {
+
+
+    if ((incidencia.asistenteId === uid && incidencia.asignado == true) || incidencia.creadorId === uid) {
+        console.log("paso")
         next();
-    }
-    if (incidencia.asistenteId === "" && incidencia.asignado === false && asistente != null) {
+    } else if (incidencia.asistenteId === "" && incidencia.asignado == false && asistente != null) {
         next();
     } else {
         return res.status(400).json({
