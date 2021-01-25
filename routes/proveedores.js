@@ -11,6 +11,7 @@ const { validarJWT } = require('../helpers/validar-jwt');
 const router = Router()
 
 router.get('/', validarJWT, getProveedores);
+
 router.get('/nombre/:id', getProveedorNombre);
 
 router.get('/perfil', validarJWT, getProveedor);

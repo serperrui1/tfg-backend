@@ -58,6 +58,14 @@ const getCompradores = async(req, res = response) => {
     });
 }
 
+const getCompradorNombre = async(req, res = response) => {
+    const comprador = await Comprador.findById(req.params.id);
+    res.json({
+        ok: true,
+        nombre: comprador.nombre
+    });
+};
+
 const getComprador = async(req, res = response) => {
 
     const compradores = await Comprador.findById(req.uid);
@@ -129,6 +137,7 @@ module.exports = {
 
     crearComprador,
     getCompradores,
+    getCompradorNombre,
     actualizarComprador,
     getComprador,
     getCompradorEmail

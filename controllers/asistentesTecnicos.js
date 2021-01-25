@@ -13,6 +13,14 @@ const getAsistentesTecnicos = async(req, res = response) => {
     });
 }
 
+const getAsistenteTecnicoNombre = async(req, res = response) => {
+    const asistenteTecnico = await AsistenteTecnico.findById(req.params.id);
+    res.json({
+        ok: true,
+        nombre: asistenteTecnico.nombre
+    });
+};
+
 const actualizarAsistenteTecnico = async(req, res = response) => {
 
     // TODO: Validar token y comprobar si el usuario es correcto
@@ -61,6 +69,15 @@ const actualizarAsistenteTecnico = async(req, res = response) => {
     }
 }
 
+const getAsistenteTecnico = async(req, res = response) => {
+
+    const asistentesTecnicos = await AsistenteTecnico.findById(req.uid);
+    res.json({
+        ok: true,
+        asistentesTecnicos
+    });
+}
+
 const borrarAsistenteTecnico = async(req, res = response) => {
 
     const uid = req.params.id;
@@ -98,6 +115,9 @@ module.exports = {
 
     getAsistentesTecnicos,
     actualizarAsistenteTecnico,
-    borrarAsistenteTecnico
+    getAsistenteTecnicoNombre,
+    borrarAsistenteTecnico,
+    getAsistenteTecnico
+
 
 }

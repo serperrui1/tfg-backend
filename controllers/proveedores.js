@@ -66,6 +66,7 @@ const getProveedores = async(req, res = response) => {
     });
 };
 
+
 const getProveedor = async(req, res = response) => {
 
     const proveedor = await Proveedor.findById(req.uid);

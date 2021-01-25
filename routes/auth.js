@@ -31,7 +31,7 @@ router.post('/administrador', [
 
 ], loginAdministrador);
 
-router.post('/asistente', [
+router.post('/asistenteTecnico', [
     check('email', 'El correo es obligatorio').isEmail(),
     check('password', 'El password es obligatorio').not().isEmpty(),
     validarCampos
