@@ -27,7 +27,6 @@ app.use('/api/administradores', require('./routes/administradores'));
 app.use('/api/asistentesTecnicos', require('./routes/asistentesTecnicos'));
 app.use('/api/upload', require('./routes/uploads'));
 app.use('/api/productos', require('./routes/productos'));
-/* app.use('/api/carrito', require('./routes/carrito')); */
 app.use('/api/faqs', require('./routes/faqs'));
 app.use('/api/incidencias', require('./routes/incidencias'));
 
