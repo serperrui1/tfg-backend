@@ -86,6 +86,20 @@ const getProducto = async(req, res = response) => {
     });
 };
 
+const getProductosBuscador = async(req, res = response) => {
+    console.log(req.params.nombre)
+
+    const productos = await Producto.find({ titulo: { $regex: req.params.nombre } });
+    res.json({
+        ok: true,
+        productos
+    });
+};
+
+
+
+
+
 const actualizarProducto = async(req, res = response) => {
 
     // TODO: Validar token y comprobar si el usuario es correcto
@@ -156,6 +170,7 @@ module.exports = {
     getMisProductos,
     getProducto,
     actualizarProducto,
-    borrarProducto
+    borrarProducto,
+    getProductosBuscador
 
 }
