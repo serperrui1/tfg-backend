@@ -18,7 +18,6 @@ const crearProducto = async(req, res) => {
     try {
         const producto = new Producto(req.body);
 
-
         if (!req.body.subcategoria)
             producto.subcategoria = "";
 
@@ -40,12 +39,14 @@ const crearProducto = async(req, res) => {
                 producto
                 //  token
             });
-        }
-        res.json({
-            ok: true,
-            msg: 'Solo el proveedor puede crear un producto'
-        });
+        } else {
+            res.json({
+                ok: true,
+                msg: 'Solo el proveedor puede crear un producto'
+            });
 
+
+        }
     } catch (error) {
         res.status(500).json({
             ok: false,
@@ -120,13 +121,16 @@ const actualizarProducto = async(req, res = response) => {
         }
 
         // Actualizaciones
-        const { proveedor, ...campos } = req.body;
+        const { proveedor, datosTecnicosAntiguos, ...campos } = req.body;
 
 
         if (productoDB.proveedor == uid) {
 
-            console.log(productoDB.proveedor);
-            console.log(uid);
+
+            for (datos of datosTecnicosAntiguos) {
+                campos.datosTecnicos.push(datos);
+            }
+            console.log(campos.datosTecnicos)
             const productoActualizado = await Producto.findByIdAndUpdate(productoId, campos, { new: true });
 
             res.json({

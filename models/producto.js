@@ -15,11 +15,11 @@ const ProductoSchema = Schema({
         required: true
     },
     datosTecnicos: [{
-        titulo: {
+        datosTecnicosTitulo: {
             type: String,
             required: true
         },
-        descripcion: {
+        datosTecnicosDescripcion: {
             type: String,
             required: true
         }
