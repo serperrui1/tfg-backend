@@ -145,7 +145,7 @@ const actualizarIncidencia = async(req, res = response) => {
                 });
             }
             //la quiero actualizar por primera vez para ser su asistente
-            if (incidencia.asistenteId === "" && incidencia.asignado === false && asistente != null) {
+            else if (incidencia.asistenteId === "" && incidencia.asignado === false && asistente != null) {
                 incidencia.asistenteId = uid;
                 incidencia.asignado = true;
                 incidencia.mensajes.push(campos.mensajes);
