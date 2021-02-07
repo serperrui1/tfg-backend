@@ -42,11 +42,12 @@ const crearIncidencia = async(req, res) => {
                 incidencia
                 //  token
             });
+        } else {
+            res.json({
+                ok: false,
+                msg: 'Controller: Sólo los compradores y proveedores pueden crear una incidencia.'
+            });
         }
-        res.json({
-            ok: false,
-            msg: 'Controller: Sólo los compradores y proveedores pueden crear una incidencia.'
-        });
 
     } catch (error) {
         res.status(500).json({
