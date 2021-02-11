@@ -27,6 +27,7 @@ router.post('/', [
         check('paisResidencia', 'El pais de residencia es obligatorio').not().isEmpty(),
         check('ciudad', 'La ciudad es obligatoria').not().isEmpty(),
         check('localidad', 'La localidad es obligatoria').not().isEmpty(),
+        check('codigoPostal', 'El código postal es obligatorio').not().isEmpty(),
         check('direccionResidencia', 'La direccion de residenciaes obligatoria').not().isEmpty(),
         validarCampos
     ],
@@ -39,6 +40,7 @@ router.put('/:id', [validarJWT,
         check('paisResidencia', 'El pais de residencia es obligatorio').not().isEmpty(),
         check('ciudad', 'La ciudad es obligatoria').not().isEmpty(),
         check('localidad', 'La localidad es obligatoria').not().isEmpty(),
+        check('codigoPostal', 'El código postal es obligatorio').not().isEmpty(),
         check('direccionResidencia', 'La direccion de residenciaes obligatoria').not().isEmpty(),
         validarCampos
     ],

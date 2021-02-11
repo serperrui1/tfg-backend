@@ -39,6 +39,13 @@ const CompradorSchema = Schema({
         type: String,
         required: true
     },
+    codigoPostal: {
+        type: String,
+        required: true
+    },
+    numeroTelefono: {
+        type: Number,
+    },
     tarjetaCredito: {
         type: String,
         required: false
