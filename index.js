@@ -30,6 +30,7 @@ app.use('/api/productos', require('./routes/productos'));
 app.use('/api/faqs', require('./routes/faqs'));
 app.use('/api/incidencias', require('./routes/incidencias'));
 app.use('/api/chats', require('./routes/chats'));
+app.use('/api/spam', require('./routes/spam'));
 
 
 
