@@ -3,7 +3,7 @@ Ruta : /api/productos
  */
 
 const { Router } = require('express');
-const { crearProducto, getProductos, getMisProductos, getProducto, borrarProducto, actualizarProducto, getProductosBuscador } = require('../controllers/productos');
+const { crearProducto, getProductos, getMisProductos, getProducto, borrarProducto, actualizarProducto, getProductosBuscador, getProductosPorProveedorId } = require('../controllers/productos');
 const { check, validationResult } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../helpers/validar-jwt');
@@ -14,6 +14,8 @@ const router = Router();
 router.get('/', getProductos);
 
 router.get('/buscador/:nombre', getProductosBuscador);
+
+router.get('/productos-de/:id', getProductosPorProveedorId);
 
 router.get('/producto/:id', getProducto);
 

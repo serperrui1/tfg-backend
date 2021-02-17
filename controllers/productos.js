@@ -78,6 +78,16 @@ const getMisProductos = async(req, res = response) => {
     });
 };
 
+const getProductosPorProveedorId = async(req, res = response) => {
+
+    const proveedorId = req.params.id;
+    const productos = await Producto.find({ proveedor: proveedorId });
+    res.json({
+        ok: true,
+        productos
+    });
+};
+
 const getProducto = async(req, res = response) => {
 
     const producto = await Producto.findById(req.params.id);
@@ -175,6 +185,7 @@ module.exports = {
     getProducto,
     actualizarProducto,
     borrarProducto,
-    getProductosBuscador
+    getProductosBuscador,
+    getProductosPorProveedorId
 
 }
