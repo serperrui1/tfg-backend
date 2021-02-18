@@ -31,6 +31,7 @@ app.use('/api/faqs', require('./routes/faqs'));
 app.use('/api/incidencias', require('./routes/incidencias'));
 app.use('/api/chats', require('./routes/chats'));
 app.use('/api/pedidos', require('./routes/pedidos'));
+app.use('/api/spam', require('./routes/spam'));
 
 
 

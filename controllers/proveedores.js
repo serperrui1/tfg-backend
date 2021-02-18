@@ -76,9 +76,16 @@ const getProveedor = async(req, res = response) => {
     });
 };
 
+const getProveedorPorId = async(req, res = response) => {
+
+    const proveedor = await Proveedor.findById(req.params.id);
+    res.json({
+        ok: true,
+        proveedor
+    });
+};
+
 const getProveedorNombre = async(req, res = response) => {
-
-
 
     const proveedor = await Proveedor.findById(req.params.id);
     res.json({
@@ -142,6 +149,7 @@ module.exports = {
     getProveedores,
     actualizarProveedor,
     getProveedor,
-    getProveedorNombre
+    getProveedorNombre,
+    getProveedorPorId
 
 };
