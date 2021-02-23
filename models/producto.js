@@ -24,6 +24,17 @@ const ProductoSchema = Schema({
             required: true
         }
     }],
+    valoraciones: [{
+        comentario: {
+            type: String,
+            required: true
+        },
+        puntuacion: {
+            type: Number,
+            required: true
+        }
+    }],
+
     categoria: {
         type: String,
         requireD: true

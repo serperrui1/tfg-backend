@@ -108,16 +108,13 @@ const getProductosBuscador = async(req, res = response) => {
 };
 
 
-
-
-
 const actualizarProducto = async(req, res = response) => {
 
     // TODO: Validar token y comprobar si el usuario es correcto
     const token = req.header('x-token');
-
     const { uid } = jwt.verify(token, process.env.JWT_SECRET);
     const productoId = req.params.id;
+    const pedidos = await Pedido.find({ comprador: uid });
 
     try {
 
@@ -131,8 +128,7 @@ const actualizarProducto = async(req, res = response) => {
         }
 
         // Actualizaciones
-        const { proveedor, datosTecnicosAntiguos, ...campos } = req.body;
-
+        const { proveedor, datosTecnicosAntiguos, valoracionesAntiguas, ...campos } = req.body;
 
         if (productoDB.proveedor == uid) {
 
@@ -141,6 +137,18 @@ const actualizarProducto = async(req, res = response) => {
                 campos.datosTecnicos.push(datos);
             }
             console.log(campos.datosTecnicos)
+            const productoActualizado = await Producto.findByIdAndUpdate(productoId, campos, { new: true });
+
+            res.json({
+                ok: true,
+                producto: productoActualizado
+            });
+
+        } else if (pedidos != null && pedidos.length != 0) {
+            for (valoracion of valoracionesAntiguas) {
+                campos.valoraciones.push(valoracion);
+            }
+            console.log(campos.valoraciones)
             const productoActualizado = await Producto.findByIdAndUpdate(productoId, campos, { new: true });
 
             res.json({
