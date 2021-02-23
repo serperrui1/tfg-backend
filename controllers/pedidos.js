@@ -63,7 +63,27 @@ const crearPedido = async(req, res) => {
 
 };
 
+const getMisPedidos = async(req, res = response) => {
 
+    const token = req.header('x-token');
+
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+
+    const pedidos = await Pedido.find({ comprador: uid });
+    res.json({
+        ok: true,
+        pedidos
+    });
+};
+
+const getPedido = async(req, res = response) => {
+
+    const pedido = await Pedido.findById(req.params.id);
+    res.json({
+        ok: true,
+        pedido
+    });
+};
 
 
 
@@ -72,7 +92,9 @@ const crearPedido = async(req, res) => {
 
 module.exports = {
 
-    crearPedido
+    crearPedido,
+    getMisPedidos,
+    getPedido
 
 
 }
