@@ -27,11 +27,13 @@ const ProductoSchema = Schema({
     valoraciones: [{
         comentario: {
             type: String,
-            required: true
         },
         puntuacion: {
             type: Number,
-            required: true
+        },
+        comprador: {
+            type: Schema.Types.ObjectId,
+            ref: 'Comprador'
         }
     }],
 
