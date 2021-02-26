@@ -1,5 +1,6 @@
 const { response } = require('express')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const Comprador = require('../models/comprador');
 const { generarJWT } = require('../helpers/jwt');
@@ -132,6 +133,58 @@ const actualizarComprador = async(req, res = response) => {
     }
 }
 
+const actualizarContraseñaComprador = async(req, res = response) => {
+
+    // TODO: Validar token y comprobar si el usuario es correcto
+
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+
+    try {
+
+        const compradorDB = await Comprador.findById(uid);
+        if (!compradorDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe un comprador con ese id'
+            })
+        } else {
+            // Actualizaciones
+            const { password, nuevaPassword } = req.body;
+            const validPassword = bcrypt.compareSync(password, compradorDB.password);
+
+            if (!validPassword) {
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'Contraseña no valida'
+                })
+            } else {
+                console.log(compradorDB.password);
+                const salt = bcrypt.genSaltSync();
+                compradorDB.password = bcrypt.hashSync(nuevaPassword, salt);
+
+                console.log(compradorDB.password);
+                const compradorActualizado = await Comprador.findByIdAndUpdate(uid, compradorDB, { new: true })
+
+                res.json({
+                    ok: true,
+                    comprador: compradorActualizado
+                })
+
+            }
+
+        }
+
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado'
+        })
+
+    }
+}
+
 
 module.exports = {
 
@@ -140,6 +193,8 @@ module.exports = {
     getCompradorNombre,
     actualizarComprador,
     getComprador,
-    getCompradorEmail
+    getCompradorEmail,
+    actualizarContraseñaComprador
+
 
 }
