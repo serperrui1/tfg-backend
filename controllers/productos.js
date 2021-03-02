@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const Producto = require('../models/producto');
+const Pedido = require('../models/pedido');
 const Proveedor = require('../models/proveedor');
 const { generarJWT } = require('../helpers/jwt');
 
@@ -108,16 +109,13 @@ const getProductosBuscador = async(req, res = response) => {
 };
 
 
-
-
-
 const actualizarProducto = async(req, res = response) => {
 
     // TODO: Validar token y comprobar si el usuario es correcto
     const token = req.header('x-token');
-
     const { uid } = jwt.verify(token, process.env.JWT_SECRET);
     const productoId = req.params.id;
+
 
     try {
 
@@ -132,7 +130,6 @@ const actualizarProducto = async(req, res = response) => {
 
         // Actualizaciones
         const { proveedor, datosTecnicosAntiguos, ...campos } = req.body;
-
 
         if (productoDB.proveedor == uid) {
 
@@ -173,6 +170,107 @@ const borrarProducto = async(req, res = response) => {
         msg: 'producto borrado'
     });
 };
+const crearValoracion = async(req, res = response) => {
+
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    const productoId = req.params.id;
+    const pedidos = await Pedido.find({ comprador: uid });
+
+    try {
+
+        const productoDB = await Producto.findById(productoId);
+
+        if (!productoDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe el producto con esa ID en la base de datos'
+            });
+        } else if (pedidos != null && pedidos.length != 0) {
+            const { comentario, puntuacion } = req.body;
+            let comprador = uid
+
+
+            let nuevaValoracion = {
+                comentario,
+                puntuacion,
+                comprador
+            };
+
+
+
+            productoDB.valoraciones.push(nuevaValoracion)
+
+            console.log(productoDB)
+            const productoActualizado = await Producto.findByIdAndUpdate(productoId, productoDB, { new: true });
+
+            res.json({
+                ok: true,
+                producto: productoActualizado
+            });
+        } else {
+            return res.status(400).json({
+                ok: false,
+                msg: 'No tienes pedidos para este producto'
+            });
+        }
+
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado'
+        });
+
+    }
+};
+
+const borrarValoracion = async(req, res = response) => {
+
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    const productoId = req.params.id;
+    const pedidos = await Pedido.find({ comprador: uid });
+
+    try {
+
+        const productoDB = await Producto.findById(productoId);
+
+        if (!productoDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe el producto con esa ID en la base de datos'
+            });
+        } else if (pedidos != null && pedidos.length != 0) {
+            const { index } = req.body;
+
+            productoDB.valoraciones.splice(index)
+
+            console.log(productoDB)
+            const productoActualizado = await Producto.findByIdAndUpdate(productoId, productoDB, { new: true });
+
+            res.json({
+                ok: true,
+                producto: productoActualizado
+            });
+        } else {
+            return res.status(400).json({
+                ok: false,
+                msg: 'No tienes pedidos para este producto'
+            });
+        }
+
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado'
+        });
+
+    }
+};
+
+
 
 
 
@@ -186,6 +284,8 @@ module.exports = {
     actualizarProducto,
     borrarProducto,
     getProductosBuscador,
-    getProductosPorProveedorId
+    getProductosPorProveedorId,
+    crearValoracion,
+    borrarValoracion
 
 }
