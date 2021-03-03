@@ -1,5 +1,6 @@
 const { response } = require('express')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken');
 
 const AsistenteTecnico = require('../models/asistenteTecnico');
 const { generarJWT } = require('../helpers/jwt');
@@ -111,13 +112,65 @@ const borrarAsistenteTecnico = async(req, res = response) => {
 
 }
 
+const actualizarContraseñaAsistente = async(req, res = response) => {
+
+    // TODO: Validar token y comprobar si el usuario es correcto
+
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+
+    try {
+
+        const asistenteDB = await AsistenteTecnico.findById(uid);
+        if (!asistenteDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe un asistente técnico con ese id'
+            })
+        } else {
+            // Actualizaciones
+            const { password, nuevaPassword } = req.body;
+            const validPassword = bcrypt.compareSync(password, asistenteDB.password);
+
+            if (!validPassword) {
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'Contraseña no valida'
+                })
+            } else {
+                const salt = bcrypt.genSaltSync();
+                asistenteDB.password = bcrypt.hashSync(nuevaPassword, salt);
+
+                const asistenteActualizado = await AsistenteTecnico.findByIdAndUpdate(uid, asistenteDB, { new: true })
+
+                res.json({
+                    ok: true,
+                    asistente: asistenteActualizado
+                })
+
+            }
+
+        }
+
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado'
+        })
+
+    }
+}
+
+
 module.exports = {
 
     getAsistentesTecnicos,
     actualizarAsistenteTecnico,
     getAsistenteTecnicoNombre,
     borrarAsistenteTecnico,
-    getAsistenteTecnico
+    getAsistenteTecnico,
+    actualizarContraseñaAsistente
 
 
 }

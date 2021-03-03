@@ -3,7 +3,7 @@ Ruta : /api/administradores
  */
 
 const { Router } = require('express');
-const { getAdministradores, actualizarAdministrador } = require('../controllers/administradores');
+const { getAdministradores, actualizarAdministrador, actualizarContraseñaAdministrador } = require('../controllers/administradores');
 const { check, validationResult } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../helpers/validar-jwt');
@@ -18,6 +18,13 @@ router.put('/:id', [validarJWT,
         validarCampos
     ],
     actualizarAdministrador);
+
+router.put('/actualizar/contrasena', [validarJWT,
+        check('password', 'La contraseña es obligatoria').not().isEmpty(),
+        check('nuevaPassword', 'La nueva contraseña es obligatoria').not().isEmpty(),
+        validarCampos
+    ],
+    actualizarContraseñaAdministrador);
 
 // router.delete('/:id',
 //     borrarUsuario);
