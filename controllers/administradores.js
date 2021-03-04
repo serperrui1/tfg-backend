@@ -111,6 +111,15 @@ const actualizarContraseñaAdministrador = async(req, res = response) => {
     }
 }
 
+const getAdministrador = async(req, res = response) => {
+
+    const administrador = await Administrador.findById(req.uid);
+    res.json({
+        ok: true,
+        administrador
+    });
+}
+
 
 
 
@@ -118,6 +127,7 @@ module.exports = {
 
     getAdministradores,
     actualizarAdministrador,
-    actualizarContraseñaAdministrador
+    actualizarContraseñaAdministrador,
+    getAdministrador
 
 }

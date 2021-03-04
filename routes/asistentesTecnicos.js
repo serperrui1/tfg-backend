@@ -18,6 +18,7 @@ router.get('/perfil', validarJWT, getAsistenteTecnico);
 
 router.put('/:id', [validarJWT,
         check('nombre', 'El nombre es obligatorio').not().isEmpty(),
+        check('apellidos', 'El apellido es obligatorio').not().isEmpty(),
         check('email', 'El email es obligatorio').isEmail(),
         validarCampos
     ],
