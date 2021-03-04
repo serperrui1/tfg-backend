@@ -3,7 +3,7 @@ Ruta : /api/compradores
  */
 
 const { Router } = require('express');
-const { crearProveedor, getProveedores, actualizarProveedor, getProveedor, getProveedorNombre, getProveedorPorId } = require('../controllers/proveedores');
+const { crearProveedor, getProveedores, actualizarProveedor, getProveedor, getProveedorNombre, getProveedorPorId, actualizarContraseñaProveedor } = require('../controllers/proveedores');
 const { check, validationResult } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../helpers/validar-jwt');
@@ -42,6 +42,13 @@ router.put('/:id', [validarJWT,
         validarCampos
     ],
     actualizarProveedor);
+
+router.put('/actualizar/contrasena', [validarJWT,
+        check('password', 'La contraseña es obligatoria').not().isEmpty(),
+        check('nuevaPassword', 'La nueva contraseña es obligatoria').not().isEmpty(),
+        validarCampos
+    ],
+    actualizarContraseñaProveedor);
 
 // router.delete('/:id',
 //     borrarUsuario);

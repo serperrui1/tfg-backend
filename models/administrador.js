@@ -6,6 +6,10 @@ const AdministradorSchema = Schema({
         type: String,
         required: true
     },
+    apellidos: {
+        type: String,
+        required: true
+    },
     email: {
         type: String,
         required: true,
@@ -14,6 +18,9 @@ const AdministradorSchema = Schema({
     password: {
         type: String,
         required: true
+    },
+    img: {
+        type: String,
     }
 
 

@@ -1,5 +1,6 @@
 const { response } = require('express');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const Proveedor = require('../models/proveedor');
 const { generarJWT } = require('../helpers/jwt');
@@ -142,6 +143,56 @@ const actualizarProveedor = async(req, res = response) => {
     }
 };
 
+const actualizarContraseñaProveedor = async(req, res = response) => {
+
+    // TODO: Validar token y comprobar si el usuario es correcto
+
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+
+    try {
+
+        const proveedorDB = await Proveedor.findById(uid);
+        if (!proveedorDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe un proveedor con ese id'
+            })
+        } else {
+            // Actualizaciones
+            const { password, nuevaPassword } = req.body;
+            const validPassword = bcrypt.compareSync(password, proveedorDB.password);
+
+            if (!validPassword) {
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'Contraseña no valida'
+                })
+            } else {
+                const salt = bcrypt.genSaltSync();
+                proveedorDB.password = bcrypt.hashSync(nuevaPassword, salt);
+
+                const proveedorActualizado = await Proveedor.findByIdAndUpdate(uid, proveedorDB, { new: true })
+
+                res.json({
+                    ok: true,
+                    proveedor: proveedorActualizado
+                })
+
+            }
+
+        }
+
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado'
+        })
+
+    }
+}
+
 
 module.exports = {
 
@@ -150,6 +201,7 @@ module.exports = {
     actualizarProveedor,
     getProveedor,
     getProveedorNombre,
-    getProveedorPorId
+    getProveedorPorId,
+    actualizarContraseñaProveedor
 
 };
