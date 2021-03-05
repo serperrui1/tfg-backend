@@ -77,17 +77,22 @@ const getMisPedidos = async(req, res = response) => {
 };
 
 const getPedido = async(req, res = response) => {
-
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
     const pedido = await Pedido.findById(req.params.id);
-    res.json({
-        ok: true,
-        pedido
-    });
+
+    if (pedido.comprador == uid || pedido.proveedor == uid) {
+        res.json({
+            ok: true,
+            pedido
+        });
+    } else {
+        res.json({
+            ok: false,
+            msg: 'Controller: No eres el proveedor ni el comprador de este pedido.'
+        });
+    }
 };
-
-
-
-
 
 
 module.exports = {
