@@ -19,8 +19,6 @@ const IncidenciaSchema = Schema({
         type: String,
         required: true
     },
-
-
     asignado: {
         type: Boolean,
         default: false
@@ -29,14 +27,10 @@ const IncidenciaSchema = Schema({
         type: Boolean,
         default: false
     },
-
-
     mensajes: [{
         type: String,
         required: false
     }],
-
-
     creadorId: {
         type: String,
         required: true
@@ -45,6 +39,14 @@ const IncidenciaSchema = Schema({
         type: String,
         required: false
     },
+    leida: {
+        type: Boolean,
+        required: false
+    },
+    ultimoEmisor: {
+        type: String,
+        required: false
+    }
 
 });
 

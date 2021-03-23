@@ -26,6 +26,14 @@ const ChatSchema = Schema({
     proveedorNombre: {
         type: String,
         required: true
+    },
+    leido: {
+        type: Boolean,
+        required: true
+    },
+    ultimoEmisor: {
+        type: String,
+        required: true
     }
 
 });

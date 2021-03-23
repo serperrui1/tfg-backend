@@ -19,11 +19,10 @@ const crearIncidencia = async(req, res) => {
     const dia = new Date().getDate();
     dia.toString();
 
-
     try {
-        const incidencia = new Incidencia(req.body);
-
         if ((await Proveedor.findById(uid) !== null) || (await Comprador.findById(uid) !== null)) {
+
+            const incidencia = new Incidencia(req.body);
             incidencia.creadorId = uid;
 
             if (!req.body.asistenteId)
@@ -34,7 +33,9 @@ const crearIncidencia = async(req, res) => {
                 console.log(incidencia.fechaPublicacion);
             }
 
-            //Guardar incidencia
+            incidencia.ultimoEmisor = uid;
+            incidencia.leida = true;
+
             await incidencia.save();
 
             res.json({
@@ -42,6 +43,7 @@ const crearIncidencia = async(req, res) => {
                 incidencia
                 //  token
             });
+
         } else {
             res.json({
                 ok: false,
@@ -137,6 +139,8 @@ const actualizarIncidencia = async(req, res = response) => {
         } else {
             // soy el dueño de esta incidencia o ya soy su asistente
             if ((incidencia.asistenteId === uid && incidencia.asignado === true) || incidencia.creadorId === uid) {
+                incidencia.ultimoEmisor = uid;
+                incidencia.leida = false;
                 incidencia.mensajes.push(campos.mensajes);
                 const incidenciaActualizada = await Incidencia.findByIdAndUpdate(req.params.id, incidencia, { new: true });
                 res.json({
@@ -147,7 +151,9 @@ const actualizarIncidencia = async(req, res = response) => {
             //la quiero actualizar por primera vez para ser su asistente
             else if (incidencia.asistenteId === "" && incidencia.asignado === false && asistente != null) {
                 incidencia.asistenteId = uid;
+                incidencia.ultimoEmisor = uid;
                 incidencia.asignado = true;
+                incidencia.leida = false;
                 incidencia.mensajes.push(campos.mensajes);
                 const incidenciaActualizada = await Incidencia.findByIdAndUpdate(req.params.id, incidencia, { new: true });
 
@@ -172,6 +178,44 @@ const actualizarIncidencia = async(req, res = response) => {
     }
 };
 
+const incidenciaLeida = async(req, res = response) => {
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    try {
+        const incidencia = await Incidencia.findById(req.params.id);
+        if (!incidencia) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'Controller: No existe esta incidencia.'
+            });
+        } else {
+            if (incidencia.ultimoEmisor != uid) {
+                incidencia.leida = true;
+                const incidenciaActualizada = await Incidencia.findByIdAndUpdate(req.params.id, incidencia, { new: true });
+                res.json({
+                    ok: true,
+                    incidencia: incidenciaActualizada
+                });
+            } else if (incidencia.ultimoEmisor === uid) {
+                res.json({
+                    ok: true,
+                    incidencia: incidencia
+                });
+            } else {
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'Controller: Debes ser el asistente o dueño de esta incidencia.'
+                });
+            }
+        }
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Controller: Error inesperado'
+        });
+    }
+}
+
 const borrarIncidencia = async(req, res = response) => {
 
     const incidencia = await Incidencia.findByIdAndDelete(req.params.id);
@@ -189,6 +233,7 @@ module.exports = {
     getMisIncidencias,
     getIncidencia,
     actualizarIncidencia,
-    borrarIncidencia
+    borrarIncidencia,
+    incidenciaLeida
 
 }

@@ -51,6 +51,9 @@ const crearChat = async(req, res) => {
                 });
             }
 
+            chat.ultimoEmisor = uid;
+            chat.leido = false;
+
             //Guardar incidencia
             await chat.save();
 
@@ -135,6 +138,8 @@ const actualizarChat = async(req, res = response) => {
         } else {
             // soy el comprador o el proveedor del chat
             if (chat.proveedorId === uid || chat.compradorId === uid) {
+                chat.ultimoEmisor = uid;
+                chat.leido = false;
                 chat.mensajes.push(campos.mensajes);
                 const chatActualizado = await Chat.findByIdAndUpdate(req.params.id, chat, { new: true });
                 res.json({
@@ -156,7 +161,44 @@ const actualizarChat = async(req, res = response) => {
     }
 };
 
-
+const chatLeido = async(req, res = response) => {
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    try {
+        const chat = await Chat.findById(req.params.id);
+        if (!chat) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'Controller: No puedes actualizar un chat inexistente.'
+            });
+        } else {
+            // soy el comprador o el proveedor del chat
+            if (chat.ultimoEmisor != uid) {
+                chat.leido = true;
+                const chatActualizado = await Chat.findByIdAndUpdate(req.params.id, chat, { new: true });
+                res.json({
+                    ok: true,
+                    chat: chatActualizado
+                });
+            } else if (chat.ultimoEmisor === uid) {
+                res.json({
+                    ok: true,
+                    chat: chat
+                });
+            } else {
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'Controller: Debes ser el comprador o proveedor de este chat.'
+                });
+            }
+        }
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Controller: Error inesperado'
+        });
+    }
+}
 
 const borrarChat = async(req, res = response) => {
     const chat = await Chat.findByIdAndDelete(req.params.id);
@@ -170,6 +212,7 @@ const borrarChat = async(req, res = response) => {
 module.exports = {
 
     crearChat,
+    chatLeido,
     getMisChats,
     getChat,
     actualizarChat,
