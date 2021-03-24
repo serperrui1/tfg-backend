@@ -13,7 +13,12 @@ const router = Router();
 
 router.get('/', getProductos);
 
-router.get('/buscador/:nombre', getProductosBuscador);
+router.post('/buscador', [
+        check('titulo', 'El título es obligatorio').not().isEmpty(),
+        check('valoraciones', 'Las valoraciones son obligatorias').not().isEmpty(),
+        validarCampos
+    ],
+    getProductosBuscador);
 
 router.get('/productos-de/:id', getProductosPorProveedorId);
 

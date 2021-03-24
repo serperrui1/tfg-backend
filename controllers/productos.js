@@ -6,6 +6,7 @@ const Producto = require('../models/producto');
 const Pedido = require('../models/pedido');
 const Proveedor = require('../models/proveedor');
 const { generarJWT } = require('../helpers/jwt');
+const producto = require('../models/producto');
 
 const crearProducto = async(req, res) => {
 
@@ -92,6 +93,7 @@ const getProductosPorProveedorId = async(req, res = response) => {
 const getProducto = async(req, res = response) => {
 
     const producto = await Producto.findById(req.params.id);
+
     res.json({
         ok: true,
         producto
@@ -99,9 +101,45 @@ const getProducto = async(req, res = response) => {
 };
 
 const getProductosBuscador = async(req, res = response) => {
-    console.log(req.params.nombre)
+    const { titulo, categoria, subcategoria, valoraciones, precioMinimo, precioMaximo } = req.body;
 
-    const productos = await Producto.find({ titulo: { $regex: req.params.nombre } });
+    var productos = await Producto.find({ titulo: { $regex: titulo } });
+
+    if (categoria != "") {
+        for (var i = 0; i < productos.length; i++) {
+            if (productos[i].categoria !== categoria)
+                productos.splice(i);
+        }
+
+        if (subcategoria != "") {
+            for (var i = 0; i < productos.length; i++) {
+                if (productos[i].subcategoria !== subcategoria)
+                    productos.splice(i);
+            }
+        }
+
+    }
+    for (var i = 0; i < productos.length; i++) {
+        var puntuacion = 0;
+        for (var valoracion of productos[i].valoraciones) {
+            puntuacion = puntuacion + valoracion.puntuacion;
+        }
+
+        puntuacion = puntuacion / productos[i].valoraciones.length;
+
+        if (productos[i].valoraciones.length == 0)
+            productos.splice(i)
+
+        else if (puntuacion < valoraciones)
+            productos.splice(i)
+    }
+    for (var i = 0; i < productos.length; i++) {
+        if (productos[i].precio < precioMinimo)
+            productos.splice(i);
+        else if (productos[i].precio > precioMaximo)
+            productos.splice(i);
+    }
+
     res.json({
         ok: true,
         productos
