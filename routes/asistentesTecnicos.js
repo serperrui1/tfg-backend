@@ -1,6 +1,6 @@
 /*
 Ruta : /api/asistentesTecnicos
- */
+*/
 
 const { Router } = require('express');
 const { getAsistentesTecnicos, actualizarAsistenteTecnico, borrarAsistenteTecnico, getAsistenteTecnicoNombre, getAsistenteTecnico, actualizarContraseñaAsistente } = require('../controllers/asistentesTecnicos');
@@ -34,6 +34,5 @@ router.put('/actualizar/contrasena', [validarJWT,
 router.delete('/:id',
     borrarAsistenteTecnico
 );
-
 
 module.exports = router;

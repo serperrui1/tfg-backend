@@ -187,7 +187,6 @@ const actualizarContraseñaComprador = async(req, res = response) => {
 
 
 module.exports = {
-
     crearComprador,
     getCompradores,
     getCompradorNombre,
@@ -195,6 +194,4 @@ module.exports = {
     getComprador,
     getCompradorEmail,
     actualizarContraseñaComprador
-
-
 }

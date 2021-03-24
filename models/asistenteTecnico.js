@@ -20,7 +20,7 @@ const AsistenteTecnicoSchema = Schema({
         required: true
     },
     img: {
-        type: String
+        type: String,
     }
 
 
