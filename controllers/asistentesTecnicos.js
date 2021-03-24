@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const AsistenteTecnico = require('../models/asistenteTecnico');
 const { generarJWT } = require('../helpers/jwt');
 
+
 const getAsistentesTecnicos = async(req, res = response) => {
 
     const asistentesTecnicos = await AsistenteTecnico.find({}, 'nombre email ');
@@ -170,7 +171,8 @@ module.exports = {
     getAsistenteTecnicoNombre,
     borrarAsistenteTecnico,
     getAsistenteTecnico,
-    actualizarContraseñaAsistente
+    actualizarContraseñaAsistente,
+
 
 
 }
