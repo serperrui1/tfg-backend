@@ -102,24 +102,30 @@ const getProducto = async(req, res = response) => {
 
 const getProductosBuscador = async(req, res = response) => {
     const { titulo, categoria, subcategoria, valoraciones, precioMinimo, precioMaximo } = req.body;
+    if (titulo == "") {
+        var productos = await Producto.find({});
 
-    var productos = await Producto.find({ titulo: { $regex: titulo } });
+    } else {
+        var productos = await Producto.find({ titulo: { $regex: titulo } });
 
+    }
+
+    console.log(categoria);
     if (categoria != "") {
-        for (var i = 0; i < productos.length; i++) {
+        for (var i = productos.length - 1; i >= 0; i--) {
             if (productos[i].categoria !== categoria)
-                productos.splice(i);
+                productos.splice(i, 1);
         }
 
         if (subcategoria != "") {
-            for (var i = 0; i < productos.length; i++) {
+            for (var i = productos.length - 1; i >= 0; i--) {
                 if (productos[i].subcategoria !== subcategoria)
-                    productos.splice(i);
+                    productos.splice(i, 1);
             }
         }
 
     }
-    for (var i = 0; i < productos.length; i++) {
+    for (var i = productos.length - 1; i >= 0; i--) {
         var puntuacion = 0;
         for (var valoracion of productos[i].valoraciones) {
             puntuacion = puntuacion + valoracion.puntuacion;
@@ -127,17 +133,18 @@ const getProductosBuscador = async(req, res = response) => {
 
         puntuacion = puntuacion / productos[i].valoraciones.length;
 
-        if (productos[i].valoraciones.length == 0)
-            productos.splice(i)
+        if (productos[i].valoraciones.length == 0 && valoraciones > 0)
+            productos.splice(i, 1)
 
         else if (puntuacion < valoraciones)
-            productos.splice(i)
+            productos.splice(i, 1)
     }
-    for (var i = 0; i < productos.length; i++) {
+    for (var i = productos.length - 1; i >= 0; i--) {
         if (productos[i].precio < precioMinimo)
-            productos.splice(i);
+            productos.splice(i, 1);
+
         else if (productos[i].precio > precioMaximo)
-            productos.splice(i);
+            productos.splice(i, 1);
     }
 
     res.json({
