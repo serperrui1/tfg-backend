@@ -27,6 +27,7 @@ const crearProveedor = async(req, res) => {
         proveedor.password = bcrypt.hashSync(password, salt);
 
         proveedor.img = "";
+        proveedor.fechaRegistro = new Date;
 
         //Guardar usuario
         await proveedor.save();
@@ -60,7 +61,7 @@ const crearProveedor = async(req, res) => {
 
 const getProveedores = async(req, res = response) => {
 
-    const proveedores = await Proveedor.find({}, 'nombre email ');
+    const proveedores = await Proveedor.find({});
     res.json({
         ok: true,
         proveedores

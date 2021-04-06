@@ -27,6 +27,7 @@ const crearComprador = async(req, res) => {
         comprador.password = bcrypt.hashSync(password, salt);
 
         comprador.img = "";
+        comprador.fechaRegistro = new Date;
 
         //Guardar usuario
         await comprador.save();
@@ -52,7 +53,7 @@ const crearComprador = async(req, res) => {
 
 const getCompradores = async(req, res = response) => {
 
-    const compradores = await Comprador.find({}, 'nombre email ');
+    const compradores = await Comprador.find({});
     res.json({
         ok: true,
         compradores

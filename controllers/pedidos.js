@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const Pedido = require('../models/pedido');
-const Proveedor = require('../models/proveedor');
+const Administrador = require('../models/administrador');
 const { generarJWT } = require('../helpers/jwt');
 const Comprador = require('../models/comprador');
 const Producto = require('../models/producto');
@@ -25,8 +25,8 @@ const crearPedido = async(req, res) => {
 
 
         pedido.comprador = uid;
-        pedido.fechaCompra = new Date
-            //año + "-" + mes + "-" + dia;
+        pedido.fechaCompra = new Date;
+        //año + "-" + mes + "-" + dia;
 
 
         //Guardar incidencia
@@ -63,6 +63,24 @@ const crearPedido = async(req, res) => {
 
 };
 
+const getPedidos = async(req, res = response) => {
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    const admin = await Administrador.findById(uid);
+    if (admin) {
+        const pedidos = await Pedido.find({});
+        res.json({
+            ok: true,
+            pedidos
+        });
+    } else {
+        res.json({
+            ok: false,
+            msg: 'Controller: Sólo un administrador puede obtener todos los pedidos.'
+        });
+    }
+};
+
 const getMisPedidos = async(req, res = response) => {
 
     const token = req.header('x-token');
@@ -70,6 +88,16 @@ const getMisPedidos = async(req, res = response) => {
     const { uid } = jwt.verify(token, process.env.JWT_SECRET);
 
     const pedidos = await Pedido.find({ comprador: uid });
+    res.json({
+        ok: true,
+        pedidos
+    });
+};
+
+const getMisPedidosProveedor = async(req, res = response) => {
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    const pedidos = await Pedido.find({ proveedor: uid });
     res.json({
         ok: true,
         pedidos
@@ -99,7 +127,9 @@ module.exports = {
 
     crearPedido,
     getMisPedidos,
-    getPedido
+    getPedido,
+    getPedidos,
+    getMisPedidosProveedor
 
 
 }
