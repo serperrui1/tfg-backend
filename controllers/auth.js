@@ -3,7 +3,7 @@ const Comprador = require('../models/comprador');
 const Proveedor = require('../models/proveedor');
 const Administrador = require('../models/administrador');
 const AsistenteTecnico = require('../models/asistenteTecnico');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { generarJWT } = require('../helpers/jwt');
 
 const loginComprador = async(req, res = response) => {
