@@ -23,6 +23,10 @@ const CompradorSchema = Schema({
         type: String,
         required: true
     },
+    nacionalidad: {
+        type: String,
+        required: true
+    },
     paisResidencia: {
         type: String,
         required: true
@@ -39,14 +43,7 @@ const CompradorSchema = Schema({
         type: String,
         required: true
     },
-    codigoPostal: {
-        type: String,
-        required: true
-    },
-    numeroTelefono: {
-        type: Number,
-    },
-    tarjetaCredito: {
+    tarjetaBancaria: {
         type: String,
         required: false
     },
@@ -57,16 +54,7 @@ const CompradorSchema = Schema({
     google: {
         type: Boolean,
         default: false
-    },
-    img: {
-        type: String,
-        required: false
-    },
-    carritoCompra: [{
-        type: Schema.Types.ObjectId,
-        ref: 'articuloCarrito'
-    }]
-
+    }
 
 });
 CompradorSchema.method('toJSON', function() {
