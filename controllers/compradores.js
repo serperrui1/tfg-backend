@@ -63,4 +63,5 @@ module.exports = {
     getComprador,
     getCompradorEmail,
     actualizarContraseñaComprador
+
 }
