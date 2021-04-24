@@ -19,6 +19,10 @@ const ProveedorSchema = Schema({
         type: String,
         required: true
     },
+    fechaRegistro: {
+        type: Date,
+        required: false
+    },
     sector: [{
         type: String,
         required: true

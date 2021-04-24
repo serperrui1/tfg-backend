@@ -1,7 +1,7 @@
 const { response } = require('express')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
-
+const AsistenteTecnico = require('../models/asistenteTecnico');
 const Administrador = require('../models/administrador');
 const { generarJWT } = require('../helpers/jwt');
 
@@ -13,6 +13,55 @@ const getAdministradores = async(req, res = response) => {
         administradores
     });
 }
+
+const crearAsistenteTecnico = async(req, res) => {
+
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    const { email, password } = req.body;
+
+    try {
+        const admin = await Administrador.findById(uid);
+        if (!admin) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Controller: Debes ser administrador para registrar un asistente técnico.'
+            });
+        }
+        console.log(email);
+        const asistenteYaRegistrado = await AsistenteTecnico.findOne({ email });
+        console.log(asistenteYaRegistrado)
+        if (asistenteYaRegistrado) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Controller: Ya existe un asistente técnico con ese email.'
+            });
+        }
+        console.log(2);
+        const asistenteTecnico = new AsistenteTecnico(req.body);
+
+        // Encriptar contraseña 
+        const salt = bcrypt.genSaltSync();
+        asistenteTecnico.password = bcrypt.hashSync(password, salt);
+        /* comprador.img = ""; */
+        await asistenteTecnico.save();
+        //Generar el token
+        const token = await generarJWT(asistenteTecnico.id);
+
+        res.json({
+            ok: true,
+            asistenteTecnico,
+            token
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado ... revisa logs'
+        });
+    }
+
+};
 
 const actualizarAdministrador = async(req, res = response) => {
 
@@ -120,14 +169,53 @@ const getAdministrador = async(req, res = response) => {
     });
 }
 
+const borrarAsistenteTecnico = async(req, res = response) => {
 
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
 
+    try {
+        const admin = await Administrador.findById(uid);
+        if (!admin) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Controller: Debes ser administrador para registrar un asistente técnico.'
+            });
+        }
+
+        const asistenteTecnicoDB = await AsistenteTecnico.findById(req.params.id);
+        if (!asistenteTecnicoDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe asistente técnico con ese id'
+
+            });
+        }
+
+        if (!asistenteTecnicoDB) {
+            await AsistenteTecnico.findByIdAndDelete(req.params.id);
+        }
+
+        res.json({
+            ok: true,
+            msg: 'Asistente técnico eliminado'
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Ha habido algún problema al eliminar el asistente técnico, revisar logs.'
+        });
+    }
+
+}
 
 module.exports = {
-
     getAdministradores,
     actualizarAdministrador,
     actualizarContraseñaAdministrador,
-    getAdministrador
-
+    getAdministrador,
+    crearAsistenteTecnico,
+    borrarAsistenteTecnico
 }

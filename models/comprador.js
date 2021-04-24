@@ -14,6 +14,10 @@ const CompradorSchema = Schema({
         type: String,
         required: true
     },
+    fechaRegistro: {
+        type: Date,
+        required: false
+    },
     email: {
         type: String,
         required: true,

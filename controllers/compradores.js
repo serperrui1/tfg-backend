@@ -25,6 +25,7 @@ const crearComprador = async(req, res) => {
         const salt = bcrypt.genSaltSync();
         comprador.password = bcrypt.hashSync(password, salt);
 
+
         //Guardar usuario
         await comprador.save();
 
@@ -47,7 +48,6 @@ const crearComprador = async(req, res) => {
 
 
     await comprador.save();
-
     res.json({
         ok: true,
         comprador
@@ -56,7 +56,11 @@ const crearComprador = async(req, res) => {
 }
 
 module.exports = {
-
-    crearComprador
-
+    crearComprador,
+    getCompradores,
+    getCompradorNombre,
+    actualizarComprador,
+    getComprador,
+    getCompradorEmail,
+    actualizarContraseñaComprador
 }
