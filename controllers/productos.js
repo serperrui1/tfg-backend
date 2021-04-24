@@ -99,9 +99,52 @@ const getProducto = async(req, res = response) => {
 };
 
 const getProductosBuscador = async(req, res = response) => {
-    console.log(req.params.nombre)
+    const { titulo, categoria, subcategoria, valoraciones, precioMinimo, precioMaximo } = req.body;
+    if (titulo == "") {
+        var productos = await Producto.find({});
 
-    const productos = await Producto.find({ titulo: { $regex: req.params.nombre } });
+    } else {
+        var productos = await Producto.find({ titulo: { $regex: titulo } });
+
+    }
+
+    console.log(categoria);
+    if (categoria != "") {
+        for (var i = productos.length - 1; i >= 0; i--) {
+            if (productos[i].categoria !== categoria)
+                productos.splice(i, 1);
+        }
+
+        if (subcategoria != "") {
+            for (var i = productos.length - 1; i >= 0; i--) {
+                if (productos[i].subcategoria !== subcategoria)
+                    productos.splice(i, 1);
+            }
+        }
+
+    }
+    for (var i = productos.length - 1; i >= 0; i--) {
+        var puntuacion = 0;
+        for (var valoracion of productos[i].valoraciones) {
+            puntuacion = puntuacion + valoracion.puntuacion;
+        }
+
+        puntuacion = puntuacion / productos[i].valoraciones.length;
+
+        if (productos[i].valoraciones.length == 0 && valoraciones > 0)
+            productos.splice(i, 1)
+
+        else if (puntuacion < valoraciones)
+            productos.splice(i, 1)
+    }
+    for (var i = productos.length - 1; i >= 0; i--) {
+        if (productos[i].precio < precioMinimo)
+            productos.splice(i, 1);
+
+        else if (productos[i].precio > precioMaximo)
+            productos.splice(i, 1);
+    }
+
     res.json({
         ok: true,
         productos

@@ -13,7 +13,7 @@ const router = Router();
 
 router.get('/', getProductos);
 
-router.get('/buscador/:nombre', getProductosBuscador);
+router.get('/buscador', getProductosBuscador);
 
 router.get('/productos-de/:id', getProductosPorProveedorId);
 
