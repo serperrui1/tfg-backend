@@ -61,11 +61,19 @@ const getCompradores = async(req, res = response) => {
 }
 
 const getCompradorNombre = async(req, res = response) => {
-    const comprador = await Comprador.findById(req.params.id);
-    res.json({
-        ok: true,
-        nombre: comprador.nombre
-    });
+    try {
+        const comprador = await Comprador.findById(req.params.id);
+        res.json({
+            ok: true,
+            nombre: comprador.nombre
+        });
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado'
+        })
+
+    }
 };
 
 const getComprador = async(req, res = response) => {

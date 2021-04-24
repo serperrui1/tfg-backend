@@ -50,13 +50,13 @@ const crearProveedor = async(req, res) => {
     }
 
 
-    await proveedor.save();
+    /* await proveedor.save();
 
     res.json({
         ok: true,
         proveedor
 
-    });
+    }); */
 };
 
 const getProveedores = async(req, res = response) => {
