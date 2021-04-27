@@ -63,10 +63,20 @@ const getCompradores = async(req, res = response) => {
 const getCompradorNombre = async(req, res = response) => {
     try {
         const comprador = await Comprador.findById(req.params.id);
-        res.json({
-            ok: true,
-            nombre: comprador.nombre
-        });
+        if (comprador) {
+            res.json({
+                ok: true,
+                nombre: comprador.nombre
+            });
+        } else {
+            if (!comprador) {
+                res.json({
+                    ok: true,
+                    nombre: ""
+                });
+            }
+        }
+
     } catch (error) {
         res.status(500).json({
             ok: false,

@@ -18,7 +18,7 @@ const loginComprador = async(req, res = response) => {
         if (!compradorDB) {
             return res.status(404).json({
                 ok: false,
-                msg: 'Contraseña o email no son validos'
+                msg: 'El email no es válido'
             })
         }
 
@@ -28,7 +28,7 @@ const loginComprador = async(req, res = response) => {
         if (!validPassword) {
             return res.status(400).json({
                 ok: false,
-                msg: 'Contraseña o email no son validos'
+                msg: 'Contraseña incorrecta'
             })
         }
 
@@ -63,7 +63,7 @@ const loginProveedor = async(req, res = response) => {
         if (!proveedorDB) {
             return res.status(404).json({
                 ok: false,
-                msg: 'Contraseña o email no son validos'
+                msg: 'El email no es válido'
             })
         }
 
@@ -73,7 +73,7 @@ const loginProveedor = async(req, res = response) => {
         if (!validPassword) {
             return res.status(400).json({
                 ok: false,
-                msg: 'Contraseña o email no son validos'
+                msg: 'Contraseña incorrecta'
             })
         }
 
@@ -108,7 +108,7 @@ const loginAdministrador = async(req, res = response) => {
         if (!administradorDB) {
             return res.status(404).json({
                 ok: false,
-                msg: 'Contraseña o email no son validos'
+                msg: 'El email no es válido'
             })
         }
 
@@ -118,7 +118,7 @@ const loginAdministrador = async(req, res = response) => {
         if (!validPassword) {
             return res.status(400).json({
                 ok: false,
-                msg: 'Contraseña o email no son validos',
+                msg: 'Contraseña incorrecta',
                 email: email
             })
         }
@@ -154,7 +154,7 @@ const loginAsistente = async(req, res = response) => {
         if (!asistenteDB) {
             return res.status(404).json({
                 ok: false,
-                msg: 'Contraseña o email no son validos'
+                msg: 'El email no es válido'
             })
         }
 
@@ -164,7 +164,7 @@ const loginAsistente = async(req, res = response) => {
         if (!validPassword) {
             return res.status(400).json({
                 ok: false,
-                msg: 'Contraseña o email no son validos'
+                msg: 'Contraseña incorrecta'
             })
         }
 
