@@ -5,6 +5,7 @@ const Administrador = require('../models/administrador');
 const AsistenteTecnico = require('../models/asistenteTecnico');
 const bcrypt = require('bcryptjs');
 const { generarJWT } = require('../helpers/jwt');
+const { googleVerify } = require('../helpers/google-verify');
 
 const loginComprador = async(req, res = response) => {
     const { email, password } = req.body;
@@ -50,7 +51,78 @@ const loginComprador = async(req, res = response) => {
     }
 
 }
+const googleSignIn = async(req, res = response) => {
+    const googleToken = req.body.token;
 
+    try {
+
+        const { given_name, family_name, email, picture, locale } = await googleVerify(googleToken);
+
+        const compradorDB = await Comprador.findOne({ email });
+        let comprador;
+        let nacionalidad = locale;
+        if (locale === 'es') {
+            nacionalidad = "España"
+        }
+        if (!compradorDB) {
+            // si no existe el usuario
+            comprador = new Comprador({
+                nombre: given_name,
+                apellidos: family_name,
+                fechaNacimiento: " ",
+                email,
+                password: '@@@',
+                nacionalidad,
+                paisResidencia: " ",
+                ciudad: " ",
+                localidad: " ",
+                direccionResidencia: " ",
+                img: picture
+
+            });
+
+            // Guardar en DB
+            await comprador.save();
+        } else {
+            // existe usuario
+            comprador = compradorDB;
+            comprador.google = true;
+        }
+
+
+
+        // Generar el TOKEN - JWT
+        const token = await generarJWT(comprador.id);
+
+        res.json({
+            ok: true,
+            token
+        });
+
+    } catch (error) {
+
+        res.status(401).json({
+            ok: false,
+            msg: 'Token no es correcto',
+
+
+        });
+    }
+}
+
+const renewToken = async(req, res = response) => {
+
+    const uid = req.uid;
+
+    // Generar el TOKEN - JWT
+    const token = await generarJWT(uid);
+
+    res.json({
+        ok: true,
+        token
+    });
+
+}
 const loginProveedor = async(req, res = response) => {
     const { email, password } = req.body;
 
@@ -191,5 +263,7 @@ module.exports = {
     loginComprador,
     loginProveedor,
     loginAdministrador,
-    loginAsistente
+    loginAsistente,
+    googleSignIn,
+    renewToken
 }

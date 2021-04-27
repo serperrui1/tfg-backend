@@ -3,7 +3,7 @@ Ruta : /api/chats
  */
 
 const { Router } = require('express');
-const { crearChat, getMisChats, getChat, borrarChat, actualizarChat, chatLeido } = require('../controllers/chats');
+const { crearChat, getMisChats, getChat, borrarChat, actualizarChat, chatLeido, existeChat } = require('../controllers/chats');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../helpers/validar-jwt');
@@ -21,5 +21,7 @@ router.put('/actualizar/:id', check('mensajes', 'No puedes borrar los mensajes d
 router.put('/leido/:id', chatLeido);
 
 router.delete('/:id', validarJWT, borrarChat);
+
+router.post('/existe-chat', validarCampos, existeChat);
 
 module.exports = router;
