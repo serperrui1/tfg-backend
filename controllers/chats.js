@@ -212,15 +212,15 @@ const existeChat = async(req, res = response) => {
     const token = req.header('x-token');
     const { uid } = jwt.verify(token, process.env.JWT_SECRET);
     const chat = await Chat.find({ compradorId: uid, proveedorId: req.body.proveedorId });
-    if (chat) {
-        res.json({
-            ok: true,
-            chatId: chat[0]._id
-        });
-    } else {
+    if (chat.length == 0) {
         res.json({
             ok: false,
             msg: 'No existe chat'
+        });
+    } else {
+        res.json({
+            ok: true,
+            chatId: chat[0]._id
         });
     }
 };

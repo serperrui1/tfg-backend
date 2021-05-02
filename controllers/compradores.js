@@ -96,12 +96,29 @@ const getComprador = async(req, res = response) => {
 }
 
 const getCompradorEmail = async(req, res = response) => {
+    try {
+        const comprador = await Comprador.findById(req.body.email);
+        if (comprador) {
+            res.json({
+                ok: true,
+                email: comprador.email
+            });
+        } else {
+            if (!comprador) {
+                res.json({
+                    ok: true,
+                    email: ""
+                });
+            }
+        }
 
-    const comprador = await Comprador.findOne(req.body.email);
-    res.json({
-        ok: true,
-        email: comprador.email
-    });
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado'
+        })
+
+    }
 };
 
 const actualizarComprador = async(req, res = response) => {

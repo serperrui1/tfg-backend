@@ -88,12 +88,29 @@ const getProveedorPorId = async(req, res = response) => {
 };
 
 const getProveedorNombre = async(req, res = response) => {
+    try {
+        const proveedor = await Proveedor.findById(req.params.id);
+        if (proveedor) {
+            res.json({
+                ok: true,
+                nombreEmpresa: proveedor.nombreEmpresa
+            });
+        } else {
+            if (!proveedor) {
+                res.json({
+                    ok: true,
+                    nombre: ""
+                });
+            }
+        }
 
-    const proveedor = await Proveedor.findById(req.params.id);
-    res.json({
-        ok: true,
-        nombreEmpresa: proveedor.nombreEmpresa
-    });
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado'
+        })
+
+    }
 };
 
 const actualizarProveedor = async(req, res = response) => {
