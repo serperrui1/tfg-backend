@@ -104,7 +104,7 @@ const getProductosBuscador = async(req, res = response) => {
         var productos = await Producto.find({});
 
     } else {
-        var productos = await Producto.find({ titulo: { $regex: titulo } });
+        var productos = await Producto.find({ titulo: new RegExp(titulo, "i") });
 
     }
 
