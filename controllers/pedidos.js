@@ -32,18 +32,14 @@ const crearPedido = async(req, res) => {
         //Guardar incidencia
         await pedido.save();
 
-        console.log(pedido.producto)
         const productoDB = await Producto.findById(pedido.producto);
-        console.log(productoDB.stock)
         if (!productoDB) {
             return res.status(404).json({
                 ok: false,
                 msg: 'No existe el producto con esa ID en la base de datos'
             });
         }
-        console.log(productoDB.stock)
         productoDB.stock = productoDB.stock - pedido.unidades;
-        console.log(productoDB.stock)
         await Producto.findByIdAndUpdate(pedido.producto, productoDB, { new: true });
 
         res.json({

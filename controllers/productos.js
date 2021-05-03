@@ -108,7 +108,6 @@ const getProductosBuscador = async(req, res = response) => {
 
     }
 
-    console.log(categoria);
     if (categoria != "") {
         for (var i = productos.length - 1; i >= 0; i--) {
             if (productos[i].categoria !== categoria)
@@ -180,7 +179,6 @@ const actualizarProducto = async(req, res = response) => {
             for (datos of datosTecnicosAntiguos) {
                 campos.datosTecnicos.push(datos);
             }
-            console.log(campos.datosTecnicos)
             const productoActualizado = await Producto.findByIdAndUpdate(productoId, campos, { new: true });
 
             res.json({
@@ -244,7 +242,6 @@ const crearValoracion = async(req, res = response) => {
 
             productoDB.valoraciones.push(nuevaValoracion)
 
-            console.log(productoDB)
             const productoActualizado = await Producto.findByIdAndUpdate(productoId, productoDB, { new: true });
 
             res.json({
@@ -289,7 +286,6 @@ const borrarValoracion = async(req, res = response) => {
 
             productoDB.valoraciones.splice(index)
 
-            console.log(productoDB)
             const productoActualizado = await Producto.findByIdAndUpdate(productoId, productoDB, { new: true });
 
             res.json({

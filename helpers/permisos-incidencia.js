@@ -95,7 +95,6 @@ const modificarIncidencia = async(req, res = response, next) => {
 
 
     if ((incidencia.asistenteId === uid && incidencia.asignado == true) || incidencia.creadorId === uid) {
-        console.log("paso")
         next();
     } else if (incidencia.asistenteId === "" && incidencia.asignado == false && asistente != null) {
         next();

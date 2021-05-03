@@ -19,7 +19,7 @@ const loginComprador = async(req, res = response) => {
         if (!compradorDB) {
             return res.status(404).json({
                 ok: false,
-                msg: 'El email no es válido'
+                msg: 'No existe cuenta con ese email.'
             })
         }
 
@@ -29,7 +29,7 @@ const loginComprador = async(req, res = response) => {
         if (!validPassword) {
             return res.status(400).json({
                 ok: false,
-                msg: 'Contraseña incorrecta'
+                msg: 'Contraseña incorrecta, introduzca la correcta asociada a esa cuenta.'
             })
         }
 
@@ -45,7 +45,7 @@ const loginComprador = async(req, res = response) => {
     } catch (error) {
         res.status(500).json({
             ok: false,
-            msg: 'Hable con el administrador'
+            msg: 'Ha habido un problema, por favor contacte con un adminstrador.'
         })
 
     }
@@ -135,7 +135,7 @@ const loginProveedor = async(req, res = response) => {
         if (!proveedorDB) {
             return res.status(404).json({
                 ok: false,
-                msg: 'El email no es válido'
+                msg: 'No existe cuenta con ese email.'
             })
         }
 
@@ -145,7 +145,7 @@ const loginProveedor = async(req, res = response) => {
         if (!validPassword) {
             return res.status(400).json({
                 ok: false,
-                msg: 'Contraseña incorrecta'
+                msg: 'Contraseña incorrecta, introduzca la correcta asociada a esa cuenta.'
             })
         }
 
@@ -161,7 +161,7 @@ const loginProveedor = async(req, res = response) => {
     } catch (error) {
         res.status(500).json({
             ok: false,
-            msg: 'Hable con el administrador'
+            msg: 'Ha habido un problema, por favor contacte con un adminstrador.'
         })
 
     }
@@ -180,7 +180,7 @@ const loginAdministrador = async(req, res = response) => {
         if (!administradorDB) {
             return res.status(404).json({
                 ok: false,
-                msg: 'El email no es válido'
+                msg: 'No existe cuenta con ese email.'
             })
         }
 
@@ -190,7 +190,7 @@ const loginAdministrador = async(req, res = response) => {
         if (!validPassword) {
             return res.status(400).json({
                 ok: false,
-                msg: 'Contraseña incorrecta',
+                msg: 'Contraseña incorrecta, introduzca la correcta asociada a esa cuenta.',
                 email: email
             })
         }
@@ -207,7 +207,7 @@ const loginAdministrador = async(req, res = response) => {
     } catch (error) {
         res.status(500).json({
             ok: false,
-            msg: 'Hable con el administrador'
+            msg: 'Ha habido un problema, por favor contacte con otro adminstrador.'
         })
 
     }
@@ -226,7 +226,7 @@ const loginAsistente = async(req, res = response) => {
         if (!asistenteDB) {
             return res.status(404).json({
                 ok: false,
-                msg: 'El email no es válido'
+                msg: 'No existe cuenta con ese email.'
             })
         }
 
@@ -236,7 +236,7 @@ const loginAsistente = async(req, res = response) => {
         if (!validPassword) {
             return res.status(400).json({
                 ok: false,
-                msg: 'Contraseña incorrecta'
+                msg: 'Contraseña incorrecta, introduzca la correcta asociada a esa cuenta.'
             })
         }
 
@@ -252,7 +252,7 @@ const loginAsistente = async(req, res = response) => {
     } catch (error) {
         res.status(500).json({
             ok: false,
-            msg: 'Hable con el administrador'
+            msg: 'Ha habido un problema, por favor contacte con un adminstrador.'
         })
 
     }

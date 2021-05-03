@@ -16,7 +16,7 @@ const crearProveedor = async(req, res) => {
         if (existeEmail) {
             return res.status(400).json({
                 ok: false,
-                msg: 'El correo ya está registrado'
+                msg: 'Ya existe un proveedor con ese email'
             });
         }
 

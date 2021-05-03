@@ -28,16 +28,13 @@ const crearAsistenteTecnico = async(req, res) => {
                 msg: 'Controller: Debes ser administrador para registrar un asistente técnico.'
             });
         }
-        console.log(email);
         const asistenteYaRegistrado = await AsistenteTecnico.findOne({ email });
-        console.log(asistenteYaRegistrado)
         if (asistenteYaRegistrado) {
             return res.status(400).json({
                 ok: false,
-                msg: 'Controller: Ya existe un asistente técnico con ese email.'
+                msg: 'Ya existe un asistente técnico con ese email.'
             });
         }
-        console.log(2);
         const asistenteTecnico = new AsistenteTecnico(req.body);
 
         // Encriptar contraseña 
@@ -202,7 +199,6 @@ const borrarAsistenteTecnico = async(req, res = response) => {
         });
 
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             ok: false,
             msg: 'Ha habido algún problema al eliminar el asistente técnico, revisar logs.'

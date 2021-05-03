@@ -12,7 +12,6 @@ const getSpam = async(req, res = response) => {
     const administrador = await Administrador.findById(uid); */
     /* if (administrador != null) { */
     const spam = await Spam.find({});
-    console.log(spam);
     res.json({
         ok: true,
         spam: spam
@@ -41,12 +40,8 @@ const actualizarSpam = async(req, res = response) => {
             });
         } else {
             if (administrador != null) {
-                console.log(spam[0].expresiones)
-                console.log(req.body.expresiones)
                 spam[0].expresiones = req.body.expresiones;
-                console.log(spam[0])
                 const spamActualizado = await Spam.findByIdAndUpdate(spam[0]._id, spam[0], { new: true });
-                console.log(spam[0]._id)
                 res.json({
                     ok: true,
                     spam: spamActualizado

@@ -30,7 +30,6 @@ const crearIncidencia = async(req, res) => {
 
             if (!req.body.fechaPublicacion) {
                 incidencia.fechaPublicacion = año + "-" + mes + "-" + dia;
-                console.log(incidencia.fechaPublicacion);
             }
 
             incidencia.ultimoEmisor = uid;

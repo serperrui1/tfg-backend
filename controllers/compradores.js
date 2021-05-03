@@ -6,7 +6,7 @@ const Comprador = require('../models/comprador');
 const { generarJWT } = require('../helpers/jwt');
 
 const crearComprador = async(req, res) => {
-
+    console.log("hola")
     const { email, password } = req.body;
 
 
@@ -16,7 +16,7 @@ const crearComprador = async(req, res) => {
         if (existeEmail) {
             return res.status(400).json({
                 ok: false,
-                msg: 'El correo ya está registrado'
+                msg: 'Ya existe un comprador con ese email'
             });
         }
 
@@ -195,11 +195,9 @@ const actualizarContraseñaComprador = async(req, res = response) => {
                     msg: 'Contraseña no valida'
                 })
             } else {
-                console.log(compradorDB.password);
                 const salt = bcrypt.genSaltSync();
                 compradorDB.password = bcrypt.hashSync(nuevaPassword, salt);
 
-                console.log(compradorDB.password);
                 const compradorActualizado = await Comprador.findByIdAndUpdate(uid, compradorDB, { new: true })
 
                 res.json({

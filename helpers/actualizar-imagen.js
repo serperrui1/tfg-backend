@@ -88,8 +88,6 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
             }
 
             administrador.img = nombreArchivo;
-            console.log(administrador)
-            console.log(nombreArchivo)
             await administrador.save();
             return true;
 
