@@ -184,7 +184,7 @@ const actualizarContraseñaProveedor = async(req, res = response) => {
             if (!validPassword) {
                 return res.status(400).json({
                     ok: false,
-                    msg: 'Contraseña no valida'
+                    msg: 'La contraseña actual introducida es incorrecta.'
                 })
             } else {
                 const salt = bcrypt.genSaltSync();
