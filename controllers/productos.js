@@ -177,6 +177,7 @@ const actualizarProducto = async(req, res = response) => {
 
 
             for (datos of datosTecnicosAntiguos) {
+                /* if (datos.titulo != null) {} */
                 campos.datosTecnicos.push(datos);
             }
             const productoActualizado = await Producto.findByIdAndUpdate(productoId, campos, { new: true });
