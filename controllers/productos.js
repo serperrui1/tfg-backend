@@ -171,15 +171,11 @@ const actualizarProducto = async(req, res = response) => {
         }
 
         // Actualizaciones
-        const { proveedor, datosTecnicosAntiguos, ...campos } = req.body;
+        const { proveedor, ...campos } = req.body;
 
         if (productoDB.proveedor == uid) {
 
 
-            for (datos of datosTecnicosAntiguos) {
-                /* if (datos.titulo != null) {} */
-                campos.datosTecnicos.push(datos);
-            }
             const productoActualizado = await Producto.findByIdAndUpdate(productoId, campos, { new: true });
 
             res.json({
@@ -310,7 +306,27 @@ const borrarValoracion = async(req, res = response) => {
     }
 };
 
+const soyElProveedor = async(req, res = response) => {
 
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    const { id } = req.body;
+
+
+    const proveedorProducto = await Producto.findById(id)
+
+    if (uid == proveedorProducto.proveedor) {
+        res.json({
+            ok: true,
+            soyElProveedor: true
+        });
+    } else {
+        res.json({
+            ok: true,
+            soyElProveedor: false
+        });
+    }
+};
 
 
 
@@ -326,6 +342,7 @@ module.exports = {
     getProductosBuscador,
     getProductosPorProveedorId,
     crearValoracion,
-    borrarValoracion
+    borrarValoracion,
+    soyElProveedor
 
 }

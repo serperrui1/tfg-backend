@@ -161,6 +161,7 @@ const actualizarProveedor = async(req, res = response) => {
     }
 };
 
+
 const actualizarContraseñaProveedor = async(req, res = response) => {
 
     // TODO: Validar token y comprobar si el usuario es correcto
@@ -210,6 +211,8 @@ const actualizarContraseñaProveedor = async(req, res = response) => {
 
     }
 }
+
+
 
 
 module.exports = {
