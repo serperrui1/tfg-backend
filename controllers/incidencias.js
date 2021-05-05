@@ -140,6 +140,7 @@ const actualizarIncidencia = async(req, res = response) => {
             if ((incidencia.asistenteId === uid && incidencia.asignado === true) || incidencia.creadorId === uid) {
                 incidencia.ultimoEmisor = uid;
                 incidencia.leida = false;
+                incidencia.resuelto = campos.resuelto;
                 incidencia.mensajes.push(campos.mensajes);
                 const incidenciaActualizada = await Incidencia.findByIdAndUpdate(req.params.id, incidencia, { new: true });
                 res.json({

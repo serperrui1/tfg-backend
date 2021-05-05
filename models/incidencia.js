@@ -24,8 +24,7 @@ const IncidenciaSchema = Schema({
         default: false
     },
     resuelto: {
-        type: Boolean,
-        default: false
+        type: Boolean
     },
     mensajes: [{
         type: String,
