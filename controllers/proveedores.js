@@ -140,7 +140,7 @@ const actualizarProveedor = async(req, res = response) => {
             if (existeEmail) {
                 return res.status(400).json({
                     ok: false,
-                    msg: 'Ya existe un proveedor con ese email'
+                    msg: 'Ya existe un proveedor con ese email.'
                 });
             }
         }
@@ -185,7 +185,7 @@ const actualizarContraseñaProveedor = async(req, res = response) => {
             if (!validPassword) {
                 return res.status(400).json({
                     ok: false,
-                    msg: 'Contraseña no valida'
+                    msg: 'La contraseña actual introducida es incorrecta.'
                 })
             } else {
                 const salt = bcrypt.genSaltSync();

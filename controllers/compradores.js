@@ -148,7 +148,7 @@ const actualizarComprador = async(req, res = response) => {
             if (existeEmail) {
                 return res.status(400).json({
                     ok: false,
-                    msg: 'Ya existe un comprador con ese email'
+                    msg: 'Ya existe un comprador con ese email.'
                 })
             }
         }
