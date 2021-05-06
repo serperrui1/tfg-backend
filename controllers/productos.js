@@ -15,6 +15,7 @@ const crearProducto = async(req, res) => {
     const token = req.header('x-token');
 
     const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(req.body);
 
     try {
         const producto = new Producto(req.body);
@@ -32,7 +33,6 @@ const crearProducto = async(req, res) => {
 
             //Guardar usuario
             await producto.save();
-
 
 
             res.json({
