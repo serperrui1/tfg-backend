@@ -30,6 +30,11 @@ const crearProducto = async(req, res) => {
         if (await Proveedor.findById(uid) !== null) {
 
             producto.proveedor = uid;
+            for (var i = producto.datosTecnicos.length - 1; i >= 0; i--) {
+                if (producto.datosTecnicos[i].datosTecnicosTitulo == "") {
+                    producto.datosTecnicos.splice(i, 1);
+                }
+            }
 
             //Guardar usuario
             await producto.save();
