@@ -60,7 +60,17 @@ const ProductoSchema = Schema({
         required: true,
         type: Schema.Types.ObjectId,
         ref: 'Proveedor'
-    }
+    },
+    posicion: [{
+        lat: {
+            type: Number,
+            required: true
+        },
+        lng: {
+            type: Number,
+            required: true
+        }
+    }]
 
 });
 

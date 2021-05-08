@@ -15,7 +15,7 @@ const crearProducto = async(req, res) => {
     const token = req.header('x-token');
 
     const { uid } = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(req.body);
+
 
     try {
         const producto = new Producto(req.body);
@@ -25,9 +25,9 @@ const crearProducto = async(req, res) => {
 
         //Añadir el proveedor que lo ha creado
 
+        const proveedor = await Proveedor.findById(uid);
 
-
-        if (await Proveedor.findById(uid) !== null) {
+        if (proveedor !== null) {
 
             producto.proveedor = uid;
             for (var i = producto.datosTecnicos.length - 1; i >= 0; i--) {
@@ -35,6 +35,9 @@ const crearProducto = async(req, res) => {
                     producto.datosTecnicos.splice(i, 1);
                 }
             }
+
+            producto.posicion[0] = proveedor.posicion[0];
+            console.log(producto);
 
             //Guardar usuario
             await producto.save();
