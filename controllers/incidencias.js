@@ -127,6 +127,13 @@ const actualizarIncidencia = async(req, res = response) => {
     const { uid } = jwt.verify(token, process.env.JWT_SECRET);
     const asistente = await AsistenteTecnico.findById(uid);
 
+    const año = new Date().getFullYear();
+    año.toString();
+    const mes = new Date().getMonth() + 1;
+    mes.toString();
+    const dia = new Date().getDate();
+    dia.toString();
+
     try {
         const incidencia = await Incidencia.findById(req.params.id);
         const { asistenteId, creadorId, asignado, ...campos } = req.body;
@@ -142,6 +149,7 @@ const actualizarIncidencia = async(req, res = response) => {
                 incidencia.leida = false;
                 incidencia.resuelto = campos.resuelto;
                 incidencia.mensajes.push(campos.mensajes);
+                incidencia.fechaPublicacion = año + "-" + mes + "-" + dia;
                 const incidenciaActualizada = await Incidencia.findByIdAndUpdate(req.params.id, incidencia, { new: true });
                 res.json({
                     ok: true,

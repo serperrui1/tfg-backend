@@ -34,6 +34,10 @@ const ChatSchema = Schema({
     ultimoEmisor: {
         type: String,
         required: true
+    },
+    fechaPedido: {
+        type: String,
+        required: false
     }
 
 });
