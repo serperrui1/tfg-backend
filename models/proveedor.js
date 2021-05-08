@@ -48,6 +48,14 @@ const ProveedorSchema = Schema({
     img: {
         type: String
     },
+    posicion: [{
+        lat: {
+            type: Number,
+        },
+        lng: {
+            type: Number,
+        }
+    }],
     productosId: [{
         type: String
     }]
