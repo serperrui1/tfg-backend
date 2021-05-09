@@ -7,7 +7,7 @@ const { generarJWT } = require('../helpers/jwt');
 
 const crearProveedor = async(req, res) => {
 
-    const { email, password } = req.body;
+    const { email, password, lat, lng } = req.body;
 
 
     try {
@@ -28,6 +28,10 @@ const crearProveedor = async(req, res) => {
 
         proveedor.img = "";
         proveedor.fechaRegistro = new Date;
+        proveedor.posicion = [{
+            lat: lat,
+            lng: lng
+        }];
 
         //Guardar usuario
         await proveedor.save();
