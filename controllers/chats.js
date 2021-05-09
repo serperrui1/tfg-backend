@@ -5,7 +5,11 @@ const jwt = require('jsonwebtoken');
 const Chat = require('../models/chat');
 const Proveedor = require('../models/proveedor');
 const Comprador = require('../models/comprador');
+const Pedido = require('../models/pedido');
+const Producto = require('../models/producto');
+
 const { generarJWT } = require('../helpers/jwt');
+const chat = require('../models/chat');
 
 
 const crearChat = async(req, res) => {
@@ -51,6 +55,16 @@ const crearChat = async(req, res) => {
                 });
             }
 
+            let mensajesDevolucion = req.body.mensajes;
+            if (mensajesDevolucion.includes(' - DEV/RCL: ')) {
+                let pedidoId = mensajesDevolucion.split(' - DEV/RCL: ').pop();
+                const pedido = await Pedido.findById(pedidoId);
+                chat.fechaPedido = pedido.fechaCompra;
+            } else {
+                chat.fechaPedido = "";
+            }
+
+
             chat.ultimoEmisor = uid;
             chat.leido = false;
 
@@ -73,6 +87,37 @@ const crearChat = async(req, res) => {
         res.status(500).json({
             ok: false,
             msg: 'Controller: Error inesperado ... revisa logs'
+        });
+    }
+
+};
+
+
+const getChatsBuscador = async(req, res = response) => {
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    const { chat } = req.body;
+    if (chat == "") {
+        var chats = await Chat.find({ $or: [{ proveedorId: uid }, { compradorId: uid }] });
+        res.json({
+            ok: true,
+            chats
+        });
+    } else {
+        var chats = await Chat.find({ $or: [{ proveedorId: uid }, { compradorId: uid }] });
+        var chatsResult = [];
+        for (var i = 0; i < chats.length; i++) {
+            var producto = await Producto.findById(chats[i].productoId);
+            var tituloProducto = producto.titulo;
+            if (tituloProducto.toLowerCase().includes(chat.toLowerCase())) {
+                chatsResult.push(chats[i]);
+            }
+        }
+        console.log(chatsResult);
+
+        res.json({
+            ok: true,
+            chats: chatsResult
         });
     }
 
@@ -127,6 +172,14 @@ const getChat = async(req, res = response) => {
 const actualizarChat = async(req, res = response) => {
     const token = req.header('x-token');
     const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+
+    const año = new Date().getFullYear();
+    año.toString();
+    const mes = new Date().getMonth() + 1;
+    mes.toString();
+    const dia = new Date().getDate();
+    dia.toString();
+
     try {
         const chat = await Chat.findById(req.params.id);
         const { proveedorId, compradorId, ...campos } = req.body;
@@ -141,6 +194,7 @@ const actualizarChat = async(req, res = response) => {
                 chat.ultimoEmisor = uid;
                 chat.leido = false;
                 chat.mensajes.push(campos.mensajes);
+                chat.fechaPublicacion = año + "-" + mes + "-" + dia;
                 const chatActualizado = await Chat.findByIdAndUpdate(req.params.id, chat, { new: true });
                 res.json({
                     ok: true,
@@ -234,6 +288,7 @@ module.exports = {
     getChat,
     actualizarChat,
     borrarChat,
-    existeChat
+    existeChat,
+    getChatsBuscador
 
 }
