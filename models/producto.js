@@ -44,6 +44,10 @@ const ProductoSchema = Schema({
     subcategoria: {
         type: String,
     },
+    puntuacionMedia: {
+        type: Number,
+        required: false
+    },
     precio: {
         type: Number,
         required: true

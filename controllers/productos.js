@@ -23,6 +23,9 @@ const crearProducto = async(req, res) => {
         if (!req.body.subcategoria)
             producto.subcategoria = "";
 
+        if (!req.body.puntuacionMedia)
+            producto.puntuacionMedia = 0;
+
         //Añadir el proveedor que lo ha creado
 
         const proveedor = await Proveedor.findById(uid);
@@ -246,9 +249,20 @@ const crearValoracion = async(req, res = response) => {
                 comprador
             };
 
-
-
             productoDB.valoraciones.push(nuevaValoracion)
+
+
+
+            var suma = 0;
+            var tamano = productoDB.valoraciones.length;
+            for (var i = 0; i < productoDB.valoraciones.length; i++) {
+                suma = suma + productoDB.valoraciones[i].puntuacion;
+            }
+            var media = suma / tamano;
+            productoDB.puntuacionMedia = media;
+
+
+
 
             const productoActualizado = await Producto.findByIdAndUpdate(productoId, productoDB, { new: true });
 
@@ -293,6 +307,19 @@ const borrarValoracion = async(req, res = response) => {
             const { index } = req.body;
 
             productoDB.valoraciones.splice(index)
+
+
+
+            var suma = 0;
+            var tamano = productoDB.valoraciones.length;
+            for (var i = 0; i < productoDB.valoraciones.length; i++) {
+                suma = suma + productoDB.valoraciones[i].puntuacion;
+            }
+            var media = suma / tamano;
+            productoDB.puntuacionMedia = media;
+
+
+
 
             const productoActualizado = await Producto.findByIdAndUpdate(productoId, productoDB, { new: true });
 
