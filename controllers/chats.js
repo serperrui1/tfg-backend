@@ -113,7 +113,6 @@ const getChatsBuscador = async(req, res = response) => {
                 chatsResult.push(chats[i]);
             }
         }
-        console.log(chatsResult);
 
         res.json({
             ok: true,
