@@ -37,6 +37,8 @@ const crearProducto = async(req, res) => {
             }
 
             producto.posicion[0] = proveedor.posicion[0];
+            producto.unidadesVendidas = 0;
+
 
             //Guardar usuario
             await producto.save();

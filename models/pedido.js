@@ -8,6 +8,10 @@ const PedidoSchema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'Producto'
     },
+    tituloProducto: {
+        required: true,
+        type: String
+    },
     unidades: {
         type: Number,
         required: true

@@ -56,6 +56,10 @@ const ProductoSchema = Schema({
         type: Number,
         required: true
     },
+    unidadesVendidas: {
+        type: Number,
+        required: true
+    },
     proveedor: {
         required: true,
         type: Schema.Types.ObjectId,

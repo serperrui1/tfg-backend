@@ -32,6 +32,8 @@ const crearProveedor = async(req, res) => {
             lat: lat,
             lng: lng
         }];
+        proveedor.unidadesVendidas = 0;
+
 
         //Guardar usuario
         await proveedor.save();

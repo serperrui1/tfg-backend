@@ -41,6 +41,10 @@ const ProveedorSchema = Schema({
         type: String,
         required: true
     },
+    unidadesVendidas: {
+        type: Number,
+        required: true
+    },
     titularCuenta: {
         type: String,
         required: true
@@ -59,6 +63,7 @@ const ProveedorSchema = Schema({
     productosId: [{
         type: String
     }]
+
 
 
 });

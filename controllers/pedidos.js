@@ -7,6 +7,7 @@ const Administrador = require('../models/administrador');
 const { generarJWT } = require('../helpers/jwt');
 const Comprador = require('../models/comprador');
 const Producto = require('../models/producto');
+const Proveedor = require('../models/proveedor');
 
 const crearPedido = async(req, res) => {
 
@@ -29,10 +30,11 @@ const crearPedido = async(req, res) => {
         //año + "-" + mes + "-" + dia;
 
 
-        //Guardar incidencia
+        //Guardar 
         await pedido.save();
 
-        const productoDB = await Producto.findById(pedido.producto);
+        var productoDB = await Producto.findById(pedido.producto);
+
         if (!productoDB) {
             return res.status(404).json({
                 ok: false,
@@ -40,7 +42,15 @@ const crearPedido = async(req, res) => {
             });
         }
         productoDB.stock = productoDB.stock - pedido.unidades;
-        await Producto.findByIdAndUpdate(pedido.producto, productoDB, { new: true });
+        productoDB.unidadesVendidas = productoDB.unidadesVendidas + pedido.unidades;
+
+        await Producto.findByIdAndUpdate(productoDB._id, productoDB);
+
+        var proveedorDB = await Proveedor.findById(req.body.proveedor);
+
+        proveedorDB.unidadesVendidas = proveedorDB.unidadesVendidas + pedido.unidades;
+
+        await Proveedor.findByIdAndUpdate(pedido.proveedor, proveedorDB);
 
         res.json({
             ok: true,
