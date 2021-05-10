@@ -108,54 +108,56 @@ const getProducto = async(req, res = response) => {
 };
 
 const getProductosBuscador = async(req, res = response) => {
-    const { titulo, categoria, subcategoria, valoraciones, precioMinimo, precioMaximo } = req.body;
-    if (titulo == "") {
-        var productos = await Producto.find({});
-
-    } else {
-        var productos = await Producto.find({ titulo: new RegExp(titulo, "i") });
-
+    var resultadoProductos = [];
+    const { titulo, categoria, subcategoria, valoraciones, precioMinimo, precioMaximo, udsMinimasMinimo, udsMinimasMaximo, stockMinimo, stockMaximo } = req.body;
+    let productos = await Producto.find({ titulo: new RegExp(titulo, "i") });
+    for (const producto of productos) {
+        resultadoProductos.push(producto);
     }
 
-    if (categoria != "") {
-        for (var i = productos.length - 1; i >= 0; i--) {
-            if (productos[i].categoria !== categoria)
-                productos.splice(i, 1);
+    if (categoria) {
+        resultadoProductos = resultadoProductos.filter((e) => e.categoria == categoria);
+        if (subcategoria) {
+            resultadoProductos = resultadoProductos.filter((e) => e.subcategoria == subcategoria);
         }
-
-        if (subcategoria != "") {
-            for (var i = productos.length - 1; i >= 0; i--) {
-                if (productos[i].subcategoria !== subcategoria)
-                    productos.splice(i, 1);
+    }
+    if (precioMinimo) {
+        resultadoProductos = resultadoProductos.filter((e) => e.precio >= precioMinimo);
+    }
+    if (precioMaximo) {
+        resultadoProductos = resultadoProductos.filter((e) => e.precio <= precioMaximo);
+    }
+    if (udsMinimasMinimo) {
+        resultadoProductos = resultadoProductos.filter((e) => e.unidadesMinimas >= udsMinimasMinimo);
+    }
+    if (udsMinimasMaximo) {
+        resultadoProductos = resultadoProductos.filter((e) => e.unidadesMinimas <= udsMinimasMaximo);
+    }
+    if (stockMinimo) {
+        resultadoProductos = resultadoProductos.filter((e) => e.stock >= stockMinimo);
+    }
+    if (stockMaximo) {
+        resultadoProductos = resultadoProductos.filter((e) => e.stock <= stockMaximo);
+    }
+    if (valoraciones) {
+        for (var i = resultadoProductos.length - 1; i >= 0; i--) {
+            var puntuacion = 0;
+            for (var valoracion of resultadoProductos[i].valoraciones) {
+                puntuacion = puntuacion + valoracion.puntuacion;
             }
+
+            puntuacion = puntuacion / resultadoProductos[i].valoraciones.length;
+
+            if (resultadoProductos[i].valoraciones.length == 0 && valoraciones > 0)
+                resultadoProductos.splice(i, 1)
+
+            else if (puntuacion < valoraciones)
+                resultadoProductos.splice(i, 1)
         }
-
     }
-    for (var i = productos.length - 1; i >= 0; i--) {
-        var puntuacion = 0;
-        for (var valoracion of productos[i].valoraciones) {
-            puntuacion = puntuacion + valoracion.puntuacion;
-        }
-
-        puntuacion = puntuacion / productos[i].valoraciones.length;
-
-        if (productos[i].valoraciones.length == 0 && valoraciones > 0)
-            productos.splice(i, 1)
-
-        else if (puntuacion < valoraciones)
-            productos.splice(i, 1)
-    }
-    for (var i = productos.length - 1; i >= 0; i--) {
-        if (productos[i].precio < precioMinimo)
-            productos.splice(i, 1);
-
-        else if (productos[i].precio > precioMaximo)
-            productos.splice(i, 1);
-    }
-
     res.json({
         ok: true,
-        productos
+        resultadoProductos
     });
 };
 

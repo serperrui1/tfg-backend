@@ -87,6 +87,36 @@ const getPedidos = async(req, res = response) => {
     }
 };
 
+const getPedidosBuscador = async(req, res = response) => {
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    const { pedido } = req.body;
+    if (pedido == "") {
+        var pedidos = await Pedido.find({ $or: [{ proveedor: uid }, { comprador: uid }] });
+        res.json({
+            ok: true,
+            pedidos
+        });
+    } else {
+        var pedidos = await Pedido.find({ $or: [{ proveedor: uid }, { comprador: uid }] });
+        var pedidosResult = [];
+        for (var i = 0; i < pedidos.length; i++) {
+            var producto = await Producto.findById(pedidos[i].producto);
+            var tituloProducto = producto.titulo;
+            if (tituloProducto.toLowerCase().includes(pedido.toLowerCase())) {
+                pedidosResult.push(pedidos[i]);
+            }
+        }
+        console.log(pedidosResult);
+
+        res.json({
+            ok: true,
+            pedidos: pedidosResult
+        });
+    }
+
+};
+
 const getMisPedidos = async(req, res = response) => {
 
     const token = req.header('x-token');
@@ -135,6 +165,7 @@ module.exports = {
     getMisPedidos,
     getPedido,
     getPedidos,
+    getPedidosBuscador,
     getMisPedidosProveedor
 
 

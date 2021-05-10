@@ -233,10 +233,42 @@ const borrarIncidencia = async(req, res = response) => {
     });
 };
 
+const getIncidenciasBuscador = async(req, res = response) => {
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    const { incidencia } = req.body;
+    if (incidencia == "") {
+        var incidencias = await Incidencia.find({ $or: [{ creadorId: uid }, { asistenteId: uid }] });
+        res.json({
+            ok: true,
+            incidencias
+        });
+    } else {
+        console.log("he entrado")
+        var incidencias = await Incidencia.find({ $or: [{ creadorId: uid }, { asistenteId: uid }] });
+        var incidenciasResult = [];
+        for (var i = 0; i < incidencias.length; i++) {
+            /* var producto = await Producto.findById(chats[i].productoId);
+            var tituloProducto = producto.titulo; */
+            if (incidencias[i].titulo.toLowerCase().includes(incidencia.toLowerCase())) {
+                incidenciasResult.push(incidencias[i]);
+            }
+        }
+        console.log(incidenciasResult);
+
+        res.json({
+            ok: true,
+            incidencias: incidenciasResult
+        });
+    }
+
+};
+
 
 module.exports = {
 
     crearIncidencia,
+    getIncidenciasBuscador,
     getIncidencias,
     getMisIncidencias,
     getIncidencia,
