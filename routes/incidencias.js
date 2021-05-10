@@ -3,7 +3,7 @@ Ruta : /api/incidencias
  */
 
 const { Router } = require('express');
-const { crearIncidencia, getIncidencias, getMisIncidencias, getIncidencia, borrarIncidencia, actualizarIncidencia, incidenciaLeida } = require('../controllers/incidencias');
+const { crearIncidencia, getIncidenciasBuscador, getIncidencias, getMisIncidencias, getIncidencia, borrarIncidencia, actualizarIncidencia, incidenciaLeida } = require('../controllers/incidencias');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../helpers/validar-jwt');
@@ -16,6 +16,8 @@ router.get('/', accesoIncidencias, getIncidencias);
 router.get('/incidencia/:id', getIncidencia);
 
 router.get('/mis-incidencias', validarJWT, getMisIncidencias);
+
+router.post('/buscador', validarJWT, getIncidenciasBuscador);
 
 router.post('/', [publicarIncidencia,
         check('titulo', 'El título es obligatorio').not().isEmpty(),

@@ -3,7 +3,7 @@ Ruta : /api/pedidos
  */
 
 const { Router } = require('express');
-const { crearPedido, getMisPedidos, getPedido, getPedidos, getMisPedidosProveedor } = require('../controllers/pedidos');
+const { crearPedido, getMisPedidos, getPedido, getPedidosBuscador, getPedidos, getMisPedidosProveedor } = require('../controllers/pedidos');
 const { check, validationResult } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarComprador } = require('../helpers/validar-proveedor');
@@ -19,6 +19,8 @@ router.get('/mis-pedidos', validarJWT, getMisPedidos);
 router.get('/mis-pedidos-proveedor', validarJWT, getMisPedidosProveedor);
 
 router.get('/todos', validarJWT, getPedidos);
+
+router.post('/buscador', validarJWT, getPedidosBuscador);
 
 router.post('/', [validarComprador,
         check('precio', 'El precio es obligatorio').not().isEmpty(),
