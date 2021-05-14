@@ -12,6 +12,10 @@ const PedidoSchema = Schema({
         required: true,
         type: String
     },
+    categoria: {
+        required: true,
+        type: String
+    },
     nombreProveedor: {
         required: false,
         type: String
