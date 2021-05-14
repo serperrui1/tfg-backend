@@ -26,6 +26,9 @@ const crearProducto = async(req, res) => {
         if (!req.body.puntuacionMedia)
             producto.puntuacionMedia = 0;
 
+        if (!req.body.productoEstrella)
+            producto.productoEstrella = false;
+
         //Añadir el proveedor que lo ha creado
 
         const proveedor = await Proveedor.findById(uid);
@@ -164,6 +167,69 @@ const getProductosBuscador = async(req, res = response) => {
     });
 };
 
+const getMisProductosBuscador = async(req, res = response) => {
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    const { titulo, categoria, subcategoria, valoraciones, precioMinimo, precioMaximo, udsMinimasMinimo, udsMinimasMaximo, stockMinimo, stockMaximo } = req.body;
+    var productos = await Producto.find({ proveedor: uid });
+    var resultadoProductos = [];
+    for (const producto of productos) {
+        resultadoProductos.push(producto);
+    }
+    if (titulo) {
+        resultadoProductos = resultadoProductos.filter((e) => e.titulo.toLowerCase().includes(titulo.toLowerCase()));
+        /* for (var i = 0; i < productos.length; i++) { 
+            if (productos[i].titulo.toLowerCase().includes(titulo.toLowerCase())) {
+                resultadoProductos.push(productos[i]);
+            }
+        } */
+    }
+    if (categoria) {
+        resultadoProductos = resultadoProductos.filter((e) => e.categoria == categoria);
+        if (subcategoria) {
+            resultadoProductos = resultadoProductos.filter((e) => e.subcategoria == subcategoria);
+        }
+    }
+    if (precioMinimo) {
+        resultadoProductos = resultadoProductos.filter((e) => e.precio >= precioMinimo);
+    }
+    if (precioMaximo) {
+        resultadoProductos = resultadoProductos.filter((e) => e.precio <= precioMaximo);
+    }
+    if (udsMinimasMinimo) {
+        resultadoProductos = resultadoProductos.filter((e) => e.unidadesMinimas >= udsMinimasMinimo);
+    }
+    if (udsMinimasMaximo) {
+        resultadoProductos = resultadoProductos.filter((e) => e.unidadesMinimas <= udsMinimasMaximo);
+    }
+    if (stockMinimo) {
+        resultadoProductos = resultadoProductos.filter((e) => e.stock >= stockMinimo);
+    }
+    if (stockMaximo) {
+        resultadoProductos = resultadoProductos.filter((e) => e.stock <= stockMaximo);
+    }
+    if (valoraciones) {
+        for (var i = resultadoProductos.length - 1; i >= 0; i--) {
+            var puntuacion = 0;
+            for (var valoracion of resultadoProductos[i].valoraciones) {
+                puntuacion = puntuacion + valoracion.puntuacion;
+            }
+
+            puntuacion = puntuacion / resultadoProductos[i].valoraciones.length;
+
+            if (resultadoProductos[i].valoraciones.length == 0 && valoraciones > 0)
+                resultadoProductos.splice(i, 1)
+
+            else if (puntuacion < valoraciones)
+                resultadoProductos.splice(i, 1)
+        }
+    }
+    res.json({
+        ok: true,
+        resultadoProductos
+    });
+};
+
 
 const actualizarProducto = async(req, res = response) => {
 
@@ -252,7 +318,7 @@ const crearValoracion = async(req, res = response) => {
             productoDB.valoraciones.push(nuevaValoracion)
 
 
-
+            //puntuacionMedia producto------------------------------------------------
             var suma = 0;
             var tamano = productoDB.valoraciones.length;
             for (var i = 0; i < productoDB.valoraciones.length; i++) {
@@ -260,6 +326,36 @@ const crearValoracion = async(req, res = response) => {
             }
             var media = suma / tamano;
             productoDB.puntuacionMedia = media;
+            //--------------------------------------------------------------------------
+
+
+
+            //puntuacionMedia proveedor---------------------------------------------
+            var suma2 = 0;
+            var tamano2 = productoDB.valoraciones.length;
+            var productos = await Producto.find({ proveedor: productoDB.proveedor });
+            for (var i = 0; i < productos.length; i++) {
+                suma2 = suma2 + productos[i].puntuacionMedia;
+            }
+            var media2 = suma2 / tamano2;
+            const proveedor = await Proveedor.findById(productoDB.proveedor);
+            proveedor.puntuacionMedia = media2;
+            await Proveedor.findByIdAndUpdate(proveedor._id, proveedor, { new: true });
+            //--------------------------------------------------------------------------
+
+
+
+
+            //productoEstrella producto---------------------------------------------------
+            var pMedia = productoDB.puntuacionMedia;
+            var ventas = productoDB.unidadesVendidas;
+            var valoraciones = productoDB.valoraciones.length;
+            if (pMedia >= 4 && ventas >= 2 && valoraciones >= 2) {
+                productoDB.productoEstrella = true;
+            } else {
+                productoDB.productoEstrella = false;
+            }
+            //--------------------------------------------------------------------------
 
 
 
@@ -309,7 +405,7 @@ const borrarValoracion = async(req, res = response) => {
             productoDB.valoraciones.splice(index)
 
 
-
+            //puntuacionMedia producto------------------------------------------------
             var suma = 0;
             var tamano = productoDB.valoraciones.length;
             for (var i = 0; i < productoDB.valoraciones.length; i++) {
@@ -317,6 +413,35 @@ const borrarValoracion = async(req, res = response) => {
             }
             var media = suma / tamano;
             productoDB.puntuacionMedia = media;
+            //--------------------------------------------------------------------------
+
+
+            //puntuacionMedia proveedor---------------------------------------------
+            var suma2 = 0;
+            var tamano2 = productoDB.valoraciones.length;
+            var productos = await Producto.find({ proveedor: productoDB.proveedor });
+            for (var i = 0; i < productos.length; i++) {
+                suma2 = suma2 + productos[i].puntuacionMedia;
+            }
+            var media2 = suma2 / tamano2;
+            const proveedor = await Proveedor.findById(productoDB.proveedor);
+            proveedor.puntuacionMedia = media2;
+            await Proveedor.findByIdAndUpdate(proveedor._id, proveedor, { new: true });
+            //--------------------------------------------------------------------------
+
+
+
+
+            //productoEstrella producto---------------------------------------------------
+            var pMedia = productoDB.puntuacionMedia;
+            var ventas = productoDB.unidadesVendidas;
+            var valoraciones = productoDB.valoraciones.length;
+            if (pMedia >= 4 && ventas >= 2 && valoraciones >= 2) {
+                productoDB.productoEstrella = true;
+            } else {
+                productoDB.productoEstrella = false;
+            }
+            //--------------------------------------------------------------------------
 
 
 
@@ -381,6 +506,7 @@ module.exports = {
     getProductosPorProveedorId,
     crearValoracion,
     borrarValoracion,
-    soyElProveedor
+    soyElProveedor,
+    getMisProductosBuscador
 
 }

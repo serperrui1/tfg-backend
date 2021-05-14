@@ -23,6 +23,10 @@ const ProveedorSchema = Schema({
         type: Date,
         required: false
     },
+    puntuacionMedia: {
+        type: Number,
+        required: false
+    },
     sector: [{
         type: String,
         required: true

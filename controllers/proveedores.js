@@ -3,6 +3,11 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const Proveedor = require('../models/proveedor');
+const Administrador = require('../models/administrador');
+const Incidencia = require('../models/incidencia');
+const Chat = require('../models/chat');
+const Pedido = require('../models/pedido');
+const Producto = require('../models/producto');
 const { generarJWT } = require('../helpers/jwt');
 
 const crearProveedor = async(req, res) => {
@@ -21,6 +26,9 @@ const crearProveedor = async(req, res) => {
         }
 
         const proveedor = new Proveedor(req.body);
+
+        if (!req.body.puntuacionMedia)
+            proveedor.puntuacionMedia = 0;
 
         // Encriptar contraseña 
         const salt = bcrypt.genSaltSync();
@@ -218,6 +226,127 @@ const actualizarContraseñaProveedor = async(req, res = response) => {
     }
 }
 
+const getProveedoresBuscador = async(req, res = response) => {
+    var proveedoresResult = [];
+    const { proveedor, sector } = req.body;
+    let proveedores = await Proveedor.find({ nombreEmpresa: new RegExp(proveedor, "i") });
+    for (const prov of proveedores) {
+        proveedoresResult.push(prov);
+    }
+    if (sector) {
+        proveedoresResult = proveedoresResult.filter((e) => e.sector == sector);
+    }
+    res.json({
+        ok: true,
+        proveedores: proveedoresResult
+    });
+
+
+    /* const { proveedor } = req.body;
+
+    if (proveedor == "") {
+        var proveedores = await Proveedor.find({});
+        res.json({
+            ok: true,
+            proveedores
+        });
+
+    } else {
+        console.log("he entrado")
+        var proveedores = await Proveedor.find({});
+        var proveedoresResult = [];
+        for (var i = 0; i < proveedores.length; i++) {
+            if (proveedores[i].nombreEmpresa.toLowerCase().includes(proveedor.toLowerCase())) {
+                proveedoresResult.push(proveedores[i]);
+            }
+        }
+        console.log(proveedoresResult);
+
+        res.json({
+            ok: true,
+            proveedores: proveedoresResult
+        });
+    } */
+
+
+
+};
+
+const borrarUsuario = async(req, res = response) => {
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+
+    try {
+        const proveedorDB = await Proveedor.findById(uid);
+        if (!proveedorDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe proveedor con ese id'
+            });
+
+        } else {
+            /* var misIncidencias = await Incidencia.find({ creadorId: uid });
+            if (misIncidencias.length != 0) {
+                for (var i = 0; i < misIncidencias.length; i++) {
+                    await Incidencia.findByIdAndDelete(misIncidencias[i]._id);
+                }
+            } */
+
+            var misIncidencias = await Incidencia.find({ creadorId: uid });
+            if (misIncidencias.length != 0) {
+                for (var i = 0; i < misIncidencias.length; i++) {
+                    var incidencia = misIncidencias[i];
+                    await Incidencia.findByIdAndDelete(incidencia._id);
+                    /* incidencia.creadorId = '';
+                    //asignado true y creador vacio, se debe controlar en front
+                    await Incidencia.findByIdAndUpdate(incidencia._id, incidencia, { new: true }); */
+                }
+            }
+
+            var misChats = await Chat.find({ proveedorId: uid });
+            if (misChats.length != 0) {
+                for (var i = 0; i < misChats.length; i++) {
+                    var chat = misChats[i];
+                    await Chat.findByIdAndDelete(chat._id);
+                    /* chat.proveedorId = '';
+                    //asignado true y creador vacio, se debe controlar en front
+                    await Chat.findByIdAndUpdate(chat._id, chat, { new: true }); */
+                }
+            }
+
+            /* var misPedidos = await Pedido.find({ proveedor: uid });
+            if (misPedidos.length != 0) {
+                for (var i = 0; i < misPedidos.length; i++) {
+                    var pedido = misPedidos[i];
+                    pedido.proveedor = '';
+                    console.log(pedido.proveedor)
+                        //asignado true y creador vacio, se debe controlar en front
+                    await Pedido.findByIdAndUpdate(pedido._id, pedido, { new: true });
+                }
+            } */
+
+            var misProductos = await Producto.find({ proveedor: uid });
+            if (misProductos.length != 0) {
+                for (var i = 0; i < misProductos.length; i++) {
+                    await Producto.findByIdAndDelete(misProductos[i]._id);
+                }
+            }
+
+            await Proveedor.findByIdAndDelete(uid);
+            res.json({
+                ok: true,
+                msg: 'Proveedor y sus entidades borrados'
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        });
+    }
+
+}
+
 
 
 
@@ -229,6 +358,8 @@ module.exports = {
     getProveedor,
     getProveedorNombre,
     getProveedorPorId,
-    actualizarContraseñaProveedor
+    actualizarContraseñaProveedor,
+    borrarUsuario,
+    getProveedoresBuscador
 
 };

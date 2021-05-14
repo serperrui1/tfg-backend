@@ -64,6 +64,10 @@ const ProductoSchema = Schema({
         type: Number,
         required: true
     },
+    productoEstrella: {
+        type: Boolean,
+        required: false
+    },
     proveedor: {
         required: true,
         type: Schema.Types.ObjectId,

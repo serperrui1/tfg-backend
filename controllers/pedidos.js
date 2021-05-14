@@ -23,17 +23,21 @@ const crearPedido = async(req, res) => {
 
     try {
         const pedido = new Pedido(req.body);
-
+        var productoDB = await Producto.findById(pedido.producto);
 
         pedido.comprador = uid;
         pedido.fechaCompra = new Date;
-        //año + "-" + mes + "-" + dia;
+
+        pedido.tituloProducto = productoDB.titulo;
+        var prov = await Proveedor.findById(pedido.proveedor);
+        pedido.nombreProveedor = prov.nombreEmpresa;
+
 
 
         //Guardar 
         await pedido.save();
 
-        var productoDB = await Producto.findById(pedido.producto);
+        /* var productoDB = await Producto.findById(pedido.producto); */
 
         if (!productoDB) {
             return res.status(404).json({
@@ -43,6 +47,24 @@ const crearPedido = async(req, res) => {
         }
         productoDB.stock = productoDB.stock - pedido.unidades;
         productoDB.unidadesVendidas = productoDB.unidadesVendidas + pedido.unidades;
+
+
+
+
+        //productoEstrella producto---------------------------------------------------
+        var pMedia = productoDB.puntuacionMedia;
+        var ventas = productoDB.unidadesVendidas;
+        var valoraciones = productoDB.valoraciones.length;
+        if (pMedia >= 4 && ventas >= 2 && valoraciones >= 2) {
+            productoDB.productoEstrella = true;
+        } else {
+            productoDB.productoEstrella = false;
+        }
+        //--------------------------------------------------------------------------
+
+
+
+
 
         await Producto.findByIdAndUpdate(productoDB._id, productoDB);
 

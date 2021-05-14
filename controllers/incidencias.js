@@ -28,6 +28,8 @@ const crearIncidencia = async(req, res) => {
             if (!req.body.asistenteId)
                 incidencia.asistenteId = "";
 
+            incidencia.resuelto = false;
+
             if (!req.body.fechaPublicacion) {
                 incidencia.fechaPublicacion = año + "-" + mes + "-" + dia;
             }

@@ -3,6 +3,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const Comprador = require('../models/comprador');
+const Incidencia = require('../models/incidencia');
+const Chat = require('../models/chat');
+const Pedido = require('../models/pedido');
+const Administrador = require('../models/administrador');
 const { generarJWT } = require('../helpers/jwt');
 
 const crearComprador = async(req, res) => {
@@ -121,6 +125,45 @@ const getCompradorEmail = async(req, res = response) => {
     }
 };
 
+const getCompradoresBuscador = async(req, res = response) => {
+
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    const { comprador } = req.body;
+    const admin = await Administrador.findById(uid);
+
+    if (!admin) {
+        return res.status(400).json({
+            ok: false,
+            msg: 'Controller: Debes ser administrador para registrar un asistente técnico.'
+        });
+    } else {
+        if (comprador == "") {
+            var compradores = await Comprador.find({});
+            res.json({
+                ok: true,
+                compradores
+            });
+
+        } else {
+            console.log("he entrado")
+            var compradores = await Comprador.find({});
+            var compradoresResult = [];
+            for (var i = 0; i < compradores.length; i++) {
+                if (compradores[i].nombre.toLowerCase().includes(comprador.toLowerCase())) {
+                    compradoresResult.push(compradores[i]);
+                }
+            }
+            console.log(compradoresResult);
+
+            res.json({
+                ok: true,
+                compradores: compradoresResult
+            });
+        }
+    }
+};
+
 const actualizarComprador = async(req, res = response) => {
 
     // TODO: Validar token y comprobar si el usuario es correcto
@@ -219,6 +262,68 @@ const actualizarContraseñaComprador = async(req, res = response) => {
     }
 }
 
+const borrarUsuario = async(req, res = response) => {
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+
+    try {
+        const compradorDB = await Comprador.findById(uid);
+        if (!compradorDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe comprador con ese id'
+            });
+
+        } else {
+            var misIncidencias = await Incidencia.find({ creadorId: uid });
+            if (misIncidencias.length != 0) {
+                for (var i = 0; i < misIncidencias.length; i++) {
+                    var incidencia = misIncidencias[i];
+                    await Incidencia.findByIdAndDelete(incidencia._id);
+                    /* incidencia.creadorId = '';
+                    //asignado true y creador vacio, se debe controlar en front
+                    await Incidencia.findByIdAndUpdate(incidencia._id, incidencia, { new: true }); */
+                }
+            }
+
+            var misChats = await Chat.find({ compradorId: uid });
+            if (misChats.length != 0) {
+                for (var i = 0; i < misChats.length; i++) {
+                    var chat = misChats[i];
+                    await Chat.findByIdAndDelete(chat._id);
+                    /* chat.compradorId = '';
+                    //asignado true y creador vacio, se debe controlar en front
+                    await Chat.findByIdAndUpdate(chat._id, chat, { new: true }); */
+                }
+            }
+
+            /* var misPedidos = await Pedido.find({ comprador: uid });
+            if (misPedidos.length != 0) {
+                for (var i = 0; i < misPedidos.length; i++) {
+                    var pedido = misPedidos[i];
+                    pedido.comprador = '';
+                    //asignado true y creador vacio, se debe controlar en front
+                    await Pedido.findByIdAndUpdate(pedido._id, pedido, { new: true });
+                }
+            } */
+
+            await Comprador.findByIdAndDelete(uid);
+            res.json({
+                ok: true,
+                msg: 'Comprador y sus entidades borrados'
+            });
+        }
+    } catch (error) {
+
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        });
+
+    }
+
+}
+
 
 module.exports = {
     crearComprador,
@@ -227,5 +332,7 @@ module.exports = {
     actualizarComprador,
     getComprador,
     getCompradorEmail,
-    actualizarContraseñaComprador
+    actualizarContraseñaComprador,
+    borrarUsuario,
+    getCompradoresBuscador
 }
