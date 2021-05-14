@@ -3,7 +3,7 @@ Ruta : /api/administradores
  */
 
 const { Router } = require('express');
-const { getAdministradores, actualizarAdministrador, actualizarContraseñaAdministrador, getAdministrador, crearAsistenteTecnico, borrarAsistenteTecnico } = require('../controllers/administradores');
+const { getAdministradores, actualizarAdministrador, actualizarContraseñaAdministrador, getAdministrador, crearAsistenteTecnico, borrarAsistenteTecnico, borrarComprador, borrarProveedor } = require('../controllers/administradores');
 const { check, validationResult } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../helpers/validar-jwt');
@@ -38,7 +38,10 @@ router.put('/actualizar/contrasena', [validarJWT,
     ],
     actualizarContraseñaAdministrador);
 
-router.delete('/:id',
-    borrarAsistenteTecnico);
+router.delete('/eliminar/asistente/:id', validarJWT, borrarAsistenteTecnico);
+
+router.delete('/eliminar/proveedor/:id', validarJWT, borrarProveedor);
+
+router.delete('/eliminar/comprador/:id', validarJWT, borrarComprador);
 
 module.exports = router;

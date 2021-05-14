@@ -1,7 +1,7 @@
 const { response } = require('express')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken');
-
+const Administrador = require('../models/administrador');
 const AsistenteTecnico = require('../models/asistenteTecnico');
 const { generarJWT } = require('../helpers/jwt');
 
@@ -80,37 +80,44 @@ const getAsistenteTecnico = async(req, res = response) => {
     });
 }
 
-const borrarAsistenteTecnico = async(req, res = response) => {
+const getAsistentesBuscador = async(req, res = response) => {
 
-    const uid = req.params.id;
-    try {
-        const asistenteTecnicoDB = await AsistenteTecnico.findById(uid);
-        if (!asistenteTecnicoDB) {
-            return res.status(404).json({
-                ok: false,
-                msg: 'No existe asistente técnico con ese id'
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    const { asistente } = req.body;
+    const admin = await Administrador.findById(uid);
 
+    if (!admin) {
+        return res.status(400).json({
+            ok: false,
+            msg: 'Controller: Debes ser administrador para registrar un asistente técnico.'
+        });
+    } else {
+        if (asistente == "") {
+            var asistentes = await AsistenteTecnico.find({});
+            res.json({
+                ok: true,
+                asistentes
+            });
+
+        } else {
+            console.log("he entrado")
+            var asistentes = await AsistenteTecnico.find({});
+            var asistentesResult = [];
+            for (var i = 0; i < asistentes.length; i++) {
+                if (asistentes[i].nombre.toLowerCase().includes(asistente.toLowerCase())) {
+                    asistentesResult.push(asistentes[i]);
+                }
+            }
+            console.log(asistentesResult);
+
+            res.json({
+                ok: true,
+                asistentes: asistentesResult
             });
         }
-
-        await AsistenteTecnico.findByIdAndDelete(uid);
-
-
-        res.json({
-            ok: true,
-            msg: 'Asistente técnico eliminado'
-        });
-
-    } catch (error) {
-
-        res.status(500).json({
-            ok: false,
-            msg: 'Hable con el administrador'
-        });
-
     }
-
-}
+};
 
 const actualizarContraseñaAsistente = async(req, res = response) => {
 
@@ -164,14 +171,10 @@ const actualizarContraseñaAsistente = async(req, res = response) => {
 
 
 module.exports = {
-
     getAsistentesTecnicos,
     actualizarAsistenteTecnico,
     getAsistenteTecnicoNombre,
-    borrarAsistenteTecnico,
     getAsistenteTecnico,
     actualizarContraseñaAsistente,
-
-
-
+    getAsistentesBuscador
 }
