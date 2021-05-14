@@ -12,6 +12,10 @@ const PedidoSchema = Schema({
         required: true,
         type: String
     },
+    categoria: {
+        required: true,
+        type: String
+    },
     unidades: {
         type: Number,
         required: true
