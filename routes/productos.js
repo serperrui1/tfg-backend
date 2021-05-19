@@ -3,7 +3,7 @@ Ruta : /api/productos
  */
 
 const { Router } = require('express');
-const { crearProducto, getProductos, getMisProductos, getProducto, borrarProducto, actualizarProducto, getProductosBuscador, getMisProductosBuscador, getProductosPorProveedorId, crearValoracion, borrarValoracion, soyElProveedor } = require('../controllers/productos');
+const { crearProducto, getProductos, getMisProductos, getProducto, borrarProducto, actualizarProducto, getProductosBuscador, getMisProductosBuscador, getProductosPorProveedorId, crearValoracion, borrarValoracion, soyElProveedor, getProductosCategoria } = require('../controllers/productos');
 const { check, validationResult } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../helpers/validar-jwt');
@@ -74,4 +74,7 @@ router.post('/soyElProveedor', [validarProveedor,
         validarCampos
     ],
     soyElProveedor);
+
+router.get('/productosCategoria/:categoria', getProductosCategoria);
+
 module.exports = router;
