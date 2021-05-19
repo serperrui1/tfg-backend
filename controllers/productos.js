@@ -491,6 +491,15 @@ const soyElProveedor = async(req, res = response) => {
     }
 };
 
+const getProductosCategoria = async(req, res = response) => {
+    const categoria = req.params.categoria.replace("%20", " ");
+    const productos = await Producto.find({ categoria: new RegExp(categoria, "i") });
+    res.json({
+        ok: true,
+        productos
+    });
+};
+
 
 
 
@@ -507,6 +516,7 @@ module.exports = {
     crearValoracion,
     borrarValoracion,
     soyElProveedor,
-    getMisProductosBuscador
+    getMisProductosBuscador,
+    getProductosCategoria
 
 }
