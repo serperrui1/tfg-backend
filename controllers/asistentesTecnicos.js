@@ -8,7 +8,7 @@ const { generarJWT } = require('../helpers/jwt');
 
 const getAsistentesTecnicos = async(req, res = response) => {
 
-    const asistentesTecnicos = await AsistenteTecnico.find({}, 'nombre email ');
+    const asistentesTecnicos = await AsistenteTecnico.find({}, 'nombre apellidos email img');
     res.json({
         ok: true,
         asistentesTecnicos

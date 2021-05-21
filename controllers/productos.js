@@ -9,24 +9,28 @@ const { generarJWT } = require('../helpers/jwt');
 
 const crearProducto = async(req, res) => {
 
-    const { id } = req.body;
+    let datos = req.body;
+    let productoDatos = datos.formData;
     // Leer el Token
 
     const token = req.header('x-token');
 
+
     const { uid } = jwt.verify(token, process.env.JWT_SECRET);
 
-
     try {
-        const producto = new Producto(req.body);
 
-        if (!req.body.subcategoria)
+
+        const producto = new Producto(productoDatos);
+        producto.imagenes = datos.urlImagenes;
+
+        if (!productoDatos.subcategoria)
             producto.subcategoria = "";
 
-        if (!req.body.puntuacionMedia)
+        if (!productoDatos.puntuacionMedia)
             producto.puntuacionMedia = 0;
 
-        if (!req.body.productoEstrella)
+        if (!productoDatos.productoEstrella)
             producto.productoEstrella = false;
 
         //Añadir el proveedor que lo ha creado
@@ -57,7 +61,7 @@ const crearProducto = async(req, res) => {
             });
         } else {
             res.json({
-                ok: true,
+                ok: false,
                 msg: 'Solo el proveedor puede crear un producto'
             });
 
