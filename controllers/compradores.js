@@ -183,7 +183,6 @@ const actualizarComprador = async(req, res = response) => {
 
         // Actualizaciones
         const { password, google, ...campos } = req.body;
-
         if (compradorDB.email === req.body.email) {
             delete campos.email;
         } else {
