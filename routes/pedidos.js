@@ -3,7 +3,7 @@ Ruta : /api/pedidos
  */
 
 const { Router } = require('express');
-const { crearPedido, getMisPedidos, getPedido, getPedidosBuscador, getPedidos, getMisPedidosProveedor } = require('../controllers/pedidos');
+const { crearPedido, getMisPedidos, getPedido, getPedidosBuscador, getPedidos, getMisPedidosProveedor, actualizarEnvio } = require('../controllers/pedidos');
 const { check, validationResult } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarComprador } = require('../helpers/validar-proveedor');
@@ -33,5 +33,6 @@ router.post('/', [validarComprador,
     ],
     crearPedido);
 
+router.put('/envio/:id', validarJWT, actualizarEnvio);
 
 module.exports = router;

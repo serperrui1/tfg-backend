@@ -201,6 +201,7 @@ const loginAdministrador = async(req, res = response) => {
 
         res.json({
             ok: true,
+            msg: 'Login realizado con exito',
             token
         })
 

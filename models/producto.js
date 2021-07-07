@@ -82,7 +82,11 @@ const ProductoSchema = Schema({
             type: Number,
             required: true
         }
-    }]
+    }],
+    tiempoEnvio: {
+        type: String,
+        required: true
+    }
 
 });
 

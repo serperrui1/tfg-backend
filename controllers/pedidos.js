@@ -179,6 +179,26 @@ const getPedido = async(req, res = response) => {
         });
     }
 };
+const actualizarEnvio = async(req, res = response) => {
+    const token = req.header('x-token');
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    const pedido = await Pedido.findById(req.params.id);
+    console.log(req.body.estado);
+
+    if (pedido.comprador == uid || pedido.proveedor == uid) {
+        pedido.estadoEnvio = req.body.estado;
+        await Pedido.findByIdAndUpdate(req.params.id, pedido);
+        res.json({
+            ok: true,
+            pedido
+        });
+    } else {
+        res.json({
+            ok: false,
+            msg: 'Controller: No eres el proveedor ni el comprador de este pedido.'
+        });
+    }
+};
 
 
 module.exports = {
@@ -188,7 +208,8 @@ module.exports = {
     getPedido,
     getPedidos,
     getPedidosBuscador,
-    getMisPedidosProveedor
+    getMisPedidosProveedor,
+    actualizarEnvio
 
 
 }

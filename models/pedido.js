@@ -57,6 +57,14 @@ const PedidoSchema = Schema({
     nombreComprador: {
         type: String,
         required: true
+    },
+    fechaEsperada: {
+        type: String,
+        required: true
+    },
+    estadoEnvio: {
+        type: String,
+        required: true
     }
 
 
