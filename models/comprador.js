@@ -65,12 +65,7 @@ const CompradorSchema = Schema({
     img: {
         type: String,
         required: false
-    },
-    carritoCompra: [{
-        type: Schema.Types.ObjectId,
-        ref: 'articuloCarrito'
-    }]
-
+    }
 
 });
 CompradorSchema.method('toJSON', function() {
