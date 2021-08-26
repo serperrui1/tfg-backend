@@ -333,23 +333,6 @@ const crearValoracion = async(req, res = response) => {
             //--------------------------------------------------------------------------
 
 
-
-            //puntuacionMedia proveedor---------------------------------------------
-            var suma2 = 0;
-            var tamano2 = productoDB.valoraciones.length;
-            var productos = await Producto.find({ proveedor: productoDB.proveedor });
-            for (var i = 0; i < productos.length; i++) {
-                suma2 = suma2 + productos[i].puntuacionMedia;
-            }
-            var media2 = suma2 / tamano2;
-            const proveedor = await Proveedor.findById(productoDB.proveedor);
-            proveedor.puntuacionMedia = media2;
-            await Proveedor.findByIdAndUpdate(proveedor._id, proveedor, { new: true });
-            //--------------------------------------------------------------------------
-
-
-
-
             //productoEstrella producto---------------------------------------------------
             var pMedia = productoDB.puntuacionMedia;
             var ventas = productoDB.unidadesVendidas;
@@ -365,6 +348,22 @@ const crearValoracion = async(req, res = response) => {
 
 
             const productoActualizado = await Producto.findByIdAndUpdate(productoId, productoDB, { new: true });
+
+
+            //puntuacionMedia proveedor---------------------------------------------
+            var suma2 = 0;
+            var tamano2 = productoDB.valoraciones.length;
+            var productos = await Producto.find({ proveedor: productoDB.proveedor });
+            for (var i = 0; i < productos.length; i++) {
+                suma2 = suma2 + productos[i].puntuacionMedia;
+            }
+            var media2 = suma2 / tamano2;
+            const proveedor = await Proveedor.findById(productoDB.proveedor);
+            proveedor.puntuacionMedia = media2;
+            await Proveedor.findByIdAndUpdate(proveedor._id, proveedor, { new: true });
+            //--------------------------------------------------------------------------
+
+
 
             res.json({
                 ok: true,
@@ -415,24 +414,14 @@ const borrarValoracion = async(req, res = response) => {
             for (var i = 0; i < productoDB.valoraciones.length; i++) {
                 suma = suma + productoDB.valoraciones[i].puntuacion;
             }
-            var media = suma / tamano;
-            productoDB.puntuacionMedia = media;
-            //--------------------------------------------------------------------------
-
-
-            //puntuacionMedia proveedor---------------------------------------------
-            var suma2 = 0;
-            var tamano2 = productoDB.valoraciones.length;
-            var productos = await Producto.find({ proveedor: productoDB.proveedor });
-            for (var i = 0; i < productos.length; i++) {
-                suma2 = suma2 + productos[i].puntuacionMedia;
+            if (tamano == 0) {
+                productoDB.puntuacionMedia = 0;
+            } else {
+                var media = suma / tamano;
+                productoDB.puntuacionMedia = media;
             }
-            var media2 = suma2 / tamano2;
-            const proveedor = await Proveedor.findById(productoDB.proveedor);
-            proveedor.puntuacionMedia = media2;
-            await Proveedor.findByIdAndUpdate(proveedor._id, proveedor, { new: true });
-            //--------------------------------------------------------------------------
 
+            //--------------------------------------------------------------------------
 
 
 
@@ -447,10 +436,26 @@ const borrarValoracion = async(req, res = response) => {
             }
             //--------------------------------------------------------------------------
 
-
-
-
             const productoActualizado = await Producto.findByIdAndUpdate(productoId, productoDB, { new: true });
+
+            //puntuacionMedia proveedor---------------------------------------------
+            var suma2 = 0;
+            var productos = await Producto.find({ proveedor: productoDB.proveedor });
+            const proveedor = await Proveedor.findById(productoDB.proveedor);
+            for (var i = 0; i < productos.length; i++) {
+                suma2 = suma2 + productos[i].puntuacionMedia;
+            }
+            if (suma2 == 0) {
+                proveedor.puntuacionMedia = 0;
+            } else {
+                var media2 = suma2 / productos.length;
+                proveedor.puntuacionMedia = media2;
+            }
+
+            await Proveedor.findByIdAndUpdate(proveedor._id, proveedor, { new: true });
+            //--------------------------------------------------------------------------
+
+
 
             res.json({
                 ok: true,

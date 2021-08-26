@@ -23,6 +23,7 @@ const crearPedido = async(req, res) => {
 
     try {
         const pedido = new Pedido(req.body);
+        console.log("se crea el pedido")
         var productoDB = await Producto.findById(pedido.producto);
 
         pedido.comprador = uid;
@@ -31,7 +32,7 @@ const crearPedido = async(req, res) => {
         pedido.tituloProducto = productoDB.titulo;
         var prov = await Proveedor.findById(pedido.proveedor);
         pedido.nombreProveedor = prov.nombreEmpresa;
-
+        pedido.fechaEsperada = productoDB.tiempoEnvio;
 
 
         //Guardar 
